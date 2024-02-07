@@ -159,14 +159,7 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
 
-# DVC and manual gitignores
+# Mnual gitignores
 !.gitkeep
-data/surveys/**
-data/surveys/**/
-data/images/**
-data/images/**/
-**/.env
-**/temp-outputs/*
-/model.pkl
-/eval
-
+data/tileset/*
+!/data/tileset/.gitkeep

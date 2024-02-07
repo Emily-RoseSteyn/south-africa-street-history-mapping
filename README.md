@@ -16,3 +16,10 @@ To get a list of all available locations downloadable via geofabrik, run:
 
 From the output, you can identify which regions you want to download for the following step.
 
+### 2. Download open street map data for region
+Use the [`geofabrik-download-locations`](./scripts/geofabrik-download-locations.sh) to download the Open Street Map data for your selected location.
+
+Here is the script for south africa:
+```shell
+./scripts/geofabrik-download-locations.sh africa/south-africa
+```
