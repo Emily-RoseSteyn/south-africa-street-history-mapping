@@ -163,3 +163,4 @@ cython_debug/
 !.gitkeep
 data/tileset/*
 !/data/tileset/.gitkeep
+data/*.sqlite
