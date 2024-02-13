@@ -8,5 +8,6 @@ filename="${filename%%.*}"
 docker run -it --rm -u $(id -u ${USER}):$(id -g ${USER}) \
         -v "${data_dir}:/data" \
         ghcr.io/osgeo/gdal:ubuntu-full-latest \
-        ogr2ogr -f SQLite -lco FORMAT=WKT "${working_dir}/${filename}.sqlite" ${pbf_filepath}
+        ogr2ogr --debug ON -overwrite -f SQLite -lco FORMAT=WKT "${working_dir}/${filename}.sqlite" ${pbf_filepath}
 
+#TODO: Convert here is too big for RAM
