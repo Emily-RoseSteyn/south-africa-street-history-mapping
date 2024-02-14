@@ -18,8 +18,11 @@ A small repo to generate a map of South Africa's streets colour coded by the nam
 ```shell
  poetry install
 ```
-
 ## Pipeline
+
+
+## Deprecated Pipeline
+**Note**: Ran into issues with this approach because the conversion from osm to sqlite does not complete successfully because of hitting max ram. Chose to instead rely on osmx as above.
 
 #### 1. List Open Street Maps Locations
 
@@ -52,3 +55,4 @@ format to work with in python).
 ```
 
 You should now have a `.sqlite` file in the [data directory](data) for your selected location.
+
