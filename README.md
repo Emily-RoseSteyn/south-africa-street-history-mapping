@@ -18,7 +18,9 @@ A small repo to generate a map of South Africa's streets colour coded by the nam
 ```shell
  poetry install
 ```
-## Pipeline
+## Relevant Notebooks
+- [Sandbox with geofabrik](notebooks/geofabrik-sandbox.ipynb) (requires deprecated pipeline to be run below)
+- [Sandbox with osmnx](notebooks/osmnx-sandbox.ipynb)
 
 
 ## Deprecated Pipeline
