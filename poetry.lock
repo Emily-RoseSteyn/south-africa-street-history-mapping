@@ -1788,6 +1788,40 @@ files = [
 ]
 
 [[package]]
+name = "osmium"
+version = "3.7.0"
+description = "Python bindings for libosmium, the data processing library for OSM data"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "osmium-3.7.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:a4898cbf594e4b0aa2cf95cb1e51dc4735bc18df9dcee0503fd1845b0560e637"},
+    {file = "osmium-3.7.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:4463f106e5e8c26bd69e183348c7ff8b6f0798d4b7b91d637e634a39ba97d4de"},
+    {file = "osmium-3.7.0-cp310-cp310-win_amd64.whl", hash = "sha256:390514d151165b549c5303ca7ea0b1ee67d25349a6d33df1b66e22256575c1c3"},
+    {file = "osmium-3.7.0-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:e6e35e0a82fff6f8f67923deec07d40a46e228e87e2892073a3191a3375cc31d"},
+    {file = "osmium-3.7.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:950f2d73e8b5c01851b0f55c2e9335c49883af1baceac969717edc61d3e0f576"},
+    {file = "osmium-3.7.0-cp311-cp311-win_amd64.whl", hash = "sha256:4c1d210c2fec70cbeb94ed573e878566eec1f76d37b1766e7c42e56d515186f8"},
+    {file = "osmium-3.7.0-cp312-cp312-macosx_10_9_x86_64.whl", hash = "sha256:027e7dc81740270a81d186379b6ce13caf766c26bd59cbdb0362bddaaace25df"},
+    {file = "osmium-3.7.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:f9797f6b0ff1c432230bd398b173b5682b4fc8d932172dfc406e612c508104b8"},
+    {file = "osmium-3.7.0-cp312-cp312-win_amd64.whl", hash = "sha256:f5872e9ee30399328f962e6d06eff5d907bda569092df3a735c0a73a9b958928"},
+    {file = "osmium-3.7.0-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:d0dbad94681d4ca6695394c4fa3af226906744827c19fe2a73114ba166622d21"},
+    {file = "osmium-3.7.0-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a7d4bdc2b900c8cbefb328c856729306bbc8261e0a87cf5a896dbbaa325a6079"},
+    {file = "osmium-3.7.0-cp36-cp36m-win_amd64.whl", hash = "sha256:c85efab123f24ce3328cbb1a500812b5969b113df5daf3d09fc38aea03939c1d"},
+    {file = "osmium-3.7.0-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:495f5b972b176878b3fe4c8c12335b61b597ed14b00ec819e7602017680bd9df"},
+    {file = "osmium-3.7.0-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:d3272e0c7532c31e2d4db30f079232742b3893a395638761d22bf68c2bd16366"},
+    {file = "osmium-3.7.0-cp37-cp37m-win_amd64.whl", hash = "sha256:c6b87f66913d540ae6c4acc07bd73586f93a1ce1663da64b7e5fe2d4e7b4f9b8"},
+    {file = "osmium-3.7.0-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:dd3578a896e603b533ad775e29f7cc5047e97355a9d6d57d890fa4fa5479c72f"},
+    {file = "osmium-3.7.0-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:c7a7e35c517b06b59879fc2b585c0cb317d02e76889b19d080c29ebf4c0e1f1a"},
+    {file = "osmium-3.7.0-cp38-cp38-win_amd64.whl", hash = "sha256:c682e3ee06234cf94d5d3fcb0ebb76044554c9f81f795b9c3951a2b432c33497"},
+    {file = "osmium-3.7.0-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:38fe8daeb4e12a6e7de1a44ef7fb5898d065c86944c63b89d5a78e1e74012abc"},
+    {file = "osmium-3.7.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:3d50c42650ab6c84831d281dcbb5a68270a2c51c5f08d4a0fca3aabdc1446786"},
+    {file = "osmium-3.7.0-cp39-cp39-win_amd64.whl", hash = "sha256:17f25a4a5aa57770750fc9913508928e90d398e8c383f1d753721696ecf775c4"},
+    {file = "osmium-3.7.0.tar.gz", hash = "sha256:6ee7f47eb76dca498b9e032f2ab0ee06f5af03b65f8c60cd87f6de97b08caea7"},
+]
+
+[package.dependencies]
+requests = "*"
+
+[[package]]
 name = "osmnx"
 version = "1.9.1"
 description = "Download, model, analyze, and visualize street networks and other geospatial features from OpenStreetMap"
@@ -3155,4 +3189,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "798d1d63e3d17dce732a183f5dabad27d558228025d8ccb7f9f79adec66f6b9e"
+content-hash = "1799e5da3178004468f9985a3a223ab8c6062a60b73194f12979054abbb9082d"
