@@ -161,7 +161,6 @@ cython_debug/
 
 # Mnual gitignores
 !.gitkeep
-data/tileset/*
-!/data/tileset/.gitkeep
-data/*.sqlite
+data/*
+!data/.gitkeep
 **/cache
