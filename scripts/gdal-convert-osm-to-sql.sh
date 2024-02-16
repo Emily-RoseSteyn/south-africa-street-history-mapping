@@ -18,11 +18,12 @@ echo ${pbf_filepath}
 echo ${filename_full}
 echo ${filename}
 
-# Note:
-# At the time of writing, specifically needed version 3.6.4 for no errors or ram issues to happen when executing ogr2ogr
-# //data used because of windows issue with working directory - potentially remove if on linux?
 docker run -it --rm \
         -v "${data_dir}:/data" \
         -w "//data" \
         ghcr.io/osgeo/gdal:ubuntu-full-3.6.4 \
         ogr2ogr -overwrite -f SQLite -lco FORMAT=WKT "${filename}.sqlite" "${filename_full}"
+
+# Note:
+# At the time of writing, specifically needed version 3.6.4 for no errors or ram issues to happen when executing ogr2ogr
+# Double slash on working directory used because of windows issue with working directory - potentially remove if on linux?
