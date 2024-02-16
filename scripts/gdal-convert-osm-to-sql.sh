@@ -1,13 +1,28 @@
-working_dir="data"
+LOCATION=${1:?"Error. You must supply a location."}
+# Assuming running from project root
+working_dir="data/${LOCATION}"
 data_dir="/${PWD}/${working_dir}"
 
-pbf_filepath=$(find . -type f -name \*.osm.pbf)
-filename=$(basename -- ${pbf_filepath})
-filename="${filename%%.*}"
+number_finds=$(find ${working_dir} -type f -name \*.osm.pbf | wc -l)
 
+if (( ${number_finds} > 1 )); then
+  echo '%s\n' "Error! More than one osm file found in location ${LOCATION}" >&2
+  exit 1
+fi
+
+pbf_filepath=$(find ${working_dir} -type f -name \*.osm.pbf)
+filename_full=$(basename -- ${pbf_filepath})
+filename="${filename_full%%.*}"
+
+echo ${pbf_filepath}
+echo ${filename_full}
+echo ${filename}
+
+# Note:
+# At the time of writing, specifically needed version 3.6.4 for no errors or ram issues to happen when executing ogr2ogr
+# //data used because of windows issue with working directory - potentially remove if on linux?
 docker run -it --rm \
         -v "${data_dir}:/data" \
-        ghcr.io/osgeo/gdal:ubuntu-full-latest \
-        ogr2ogr --debug ON -overwrite -f SQLite -lco FORMAT=WKT "${working_dir}/${filename}.sqlite" ${pbf_filepath}
-
-#TODO: Convert here is too big for RAM
+        -w "//data" \
+        ghcr.io/osgeo/gdal:ubuntu-full-3.6.4 \
+        ogr2ogr -overwrite -f SQLite -lco FORMAT=WKT "${filename}.sqlite" "${filename_full}"

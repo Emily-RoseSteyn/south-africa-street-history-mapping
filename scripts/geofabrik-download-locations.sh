@@ -1,8 +1,9 @@
-LOCATION=$1
+LOCATION=${1:?"Error. You must supply a location."}
 # Assuming running from project root
-data_dir="data/${LOCATION}"
+working_dir="data/${LOCATION}"
+data_dir="/${PWD}/${working_dir}"
 
 docker run -it --rm \
-  -v "/${PWD}/${data_dir}:/tileset" \
+  -v "${data_dir}:/tileset" \
   openmaptiles/openmaptiles-tools \
   download-osm geofabrik --state state.txt ${LOCATION}
