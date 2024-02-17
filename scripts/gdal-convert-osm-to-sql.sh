@@ -3,14 +3,14 @@ LOCATION=${1:?"Error. You must supply a location."}
 working_dir="data/${LOCATION}"
 data_dir="/${PWD}/${working_dir}"
 
-number_finds=$(find ${working_dir} -type f -name \*.osm.pbf | wc -l)
+number_finds=$(find ${working_dir} -maxdepth 1 -type f -name \*.osm.pbf | wc -l)
 
 if (( ${number_finds} > 1 )); then
   echo '%s\n' "Error! More than one osm file found in location ${LOCATION}" >&2
   exit 1
 fi
 
-pbf_filepath=$(find ${working_dir} -type f -name \*.osm.pbf)
+pbf_filepath=$(find ${working_dir} -maxdepth 1 -type f -name \*.osm.pbf)
 filename_full=$(basename -- ${pbf_filepath})
 filename="${filename_full%%.*}"
 
