@@ -18,13 +18,13 @@ A small repo to generate a map of South Africa's streets colour coded by the nam
 ```shell
  poetry install
 ```
+
 ## Relevant Notebooks
-- [Sandbox with geofabrik](notebooks/geofabrik-sandbox.ipynb) (requires deprecated pipeline to be run below)
+
+- [Sandbox with geofabrik](notebooks/geofabrik-sandbox.ipynb) (requires pipeline to be run below)
 - [Sandbox with osmnx](notebooks/osmnx-sandbox.ipynb)
 
-
-## Deprecated Pipeline
-**Note**: Ran into issues with this approach because the conversion from osm to sqlite does not complete successfully because of hitting max ram. Chose to instead rely on osmx as above.
+## Pipeline for Dictionary Generation
 
 #### 1. List Open Street Maps Locations
 
@@ -47,14 +47,35 @@ Here is the script for south africa:
 ./scripts/geofabrik-download-locations.sh africa/south-africa
 ```
 
-### 3. Convert osm data to sqlite
+**Repeat this step for the following countries:**
+
+| Code                                  | Size [GB] |
+|---------------------------------------|-----------|
+| `africa/south-africa`                 | 0.3       |
+| `europe/belgium`                      | 0.6       |
+| `europe/france`                       | 4.2       |
+| `europe/germany`                      | 4.0       |
+| `europe/ireland-and-northern-ireland` | 0.3       |
+| `europe/italy`                        | 1.8       |
+| `europe/netherlands`                  | 1.2       |
+| `europe/portugal`                     | 0.3       |
+| `europe/spain`                        | 1.1       |
+| `europe/great-britain/england`        | 1.3       |
+| `europe/great-britain/scotland`       | 0.3       |
+| `europe/great-britain/wales`          | 0.1       |
+|                                       |           |
+| **Total**                             | ~16GB     |
+
+### 4. Convert osm data to sqlite
 
 Use the [`gdal convert script`](./scripts/gdal-convert-osm-to-sql.sh) to convert the OSM data to sqlite (an easier
 format to work with in python).
 
 ```shell
-./scripts/gdal-convert-osm-to-sql.sh
+./scripts/gdal-convert-osm-to-sql.sh africa/south-africa
 ```
 
-You should now have a `.sqlite` file in the [data directory](data) for your selected location.
+Repeat for all downloaded countries.
+
+You should now have a `.sqlite` file in the [data directory](data) for your selected locations.
 
