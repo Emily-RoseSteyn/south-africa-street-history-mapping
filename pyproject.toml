@@ -16,6 +16,8 @@ plotnine = "^0.12.4"
 jupyter = "^1.0.0"
 osmnx = "^1.9.1"
 osmium = "^3.7.0"
+pyrosm = "^0.6.2"
+pyarrow = "^15.0.0"
 
 
 [build-system]
