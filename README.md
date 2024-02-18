@@ -133,17 +133,14 @@ cd data/${LOCATION}
 ogr2ogr -overwrite -f SQLite -lco FORMAT=WKT "${filename}.sqlite" "${filename}.osm.pbf"
 ```
 
-[//]: # (### 5. [*Optional!*] Move data to remote server)
+### 5. [*Optional!*] Move data to remote server
 
-[//]: # ()
-[//]: # (You'll need `rsync` for this step. You can run the following from the root project directory to sync the data across to)
+You'll need `rsync` for this step.
+You can run the following from the root project directory to sync the data across to
+a remote server if need be:
 
-[//]: # (a remote server if need be:)
-
-[//]: # ()
-[//]: # (```shell)
-
-[//]: # (rsync -avm --include='*/' --include='*.osm.pbf' --exclude='*' ./data ${REMOTE}:${REMOTE_DIRECTORY})
+```shell
+rsync -avm --include='*/' --include='*.osm.pbf' --exclude='*' ./data ${REMOTE}:${REMOTE_DIRECTORY}
 ```
 
 ## Dictionary Generation
