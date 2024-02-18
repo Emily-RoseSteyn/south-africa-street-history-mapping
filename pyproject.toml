@@ -5,7 +5,7 @@ description = ""
 authors = ["Emily-Rose Steyn <emilyrosesteyn@gmail.com>"]
 license = "GPL3.0"
 readme = "README.md"
-packages = [{ include = "street_list_retrieval", from = "src" }, { include = "utils", from = "src" }]
+packages = [{ include = "street_list_download", from = "src" }, { include = "utils", from = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.10"

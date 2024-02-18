@@ -1,7 +1,7 @@
 import time
 
-from street_list_retrieval.country_iso_map import COUNTRY_ISO_MAP, COUNTRY_ISO_CODE_NAME_MAP
-from street_list_retrieval.retrieve_and_process_country import retrieve_and_process_country
+from utils.country_iso_map import COUNTRY_ISO_MAP
+from street_list_download.download_country_streets import download_country_streets
 from utils.logger import get_logger
 
 logger = get_logger()
@@ -21,7 +21,7 @@ def retrieve_street_list() -> None:
             f"Item {country} is being processed"
         )
 
-        retrieve_and_process_country(country)
+        download_country_streets(country)
 
     # Finished
     logger.info(

@@ -1,17 +1,16 @@
 import time
 
-import requests
 from mpi4py import MPI
 
-from street_list_retrieval.country_iso_map import COUNTRY_ISO_MAP
-from street_list_retrieval.retrieve_and_process_country import retrieve_and_process_country
+from utils.country_iso_map import COUNTRY_ISO_MAP
+from street_list_download.download_country_streets import download_country_streets
 from utils.logger import get_logger
 
 logger = get_logger()
 
 
 def retrieve_street_list() -> None:
-    logger.info("Retrieving street list for countries")
+    logger.info("Retrieving street list for countries with slurm")
 
     start_time = time.time()
     rank = MPI.COMM_WORLD.Get_rank()
@@ -39,7 +38,7 @@ def retrieve_street_list() -> None:
         )
 
         # Do stuff here!
-        retrieve_and_process_country(country)
+        download_country_streets(country)
 
     # End do stuff
 
