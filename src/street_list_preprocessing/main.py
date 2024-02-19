@@ -17,10 +17,6 @@ def preprocess_streets() -> None:
 
     # For each file
     for country_file in countries:
-        logger.info(
-            f"File {country_file} is being processed"
-        )
-
         preprocess_country_streets(country_file)
 
     # Finished

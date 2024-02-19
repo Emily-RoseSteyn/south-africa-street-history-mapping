@@ -14,3 +14,5 @@ WORD_LENGTH_THRESHOLD = 3
 
 STREET_DATA_DIR = "data/streets"
 PROCESSED_STREET_DATA_DIR = "output/streets"
+
+STREET_OUTPUT_PREFIX = "processed"
