@@ -4,7 +4,8 @@ from pathlib import Path
 import pandas as pd
 
 from utils.country_iso_map import COUNTRY_ISO_CODE_NAME_MAP
-from utils.env_variables import PROCESSED_STREET_DATA_DIR, WORD_LENGTH_THRESHOLD, STREET_OUTPUT_PREFIX
+from utils.env_variables import PROCESSED_STREET_DATA_DIR, WORD_LENGTH_THRESHOLD, STREET_OUTPUT_PREFIX, \
+    MERGED_STREET_DATA_FILE
 from utils.logger import get_logger
 
 logger = get_logger()
@@ -18,6 +19,14 @@ def write_dataframe_to_csv(df: pd.DataFrame, file_name: str):
 
     output_file = os.path.join(output_dir, file_name)
     df.to_csv(output_file, index=False)
+
+
+def write_to_merged_csv(df: pd.DataFrame):
+    output_file = MERGED_STREET_DATA_FILE
+    if not os.path.exists(output_file):
+        df.to_csv(output_file, index=False)
+    else:
+        df.to_csv(output_file, index=False, mode="a", header=False)
 
 
 def preprocess_country_streets(country_file):
@@ -86,5 +95,8 @@ def preprocess_country_streets(country_file):
     df.rename(columns={"name": "term"})
     prefix = STREET_OUTPUT_PREFIX
     write_dataframe_to_csv(df, f"{prefix}_{file_name}")
+
+    # Write to merged csv
+    write_to_merged_csv(df)
 
     logger.info('\n')

@@ -1,7 +1,8 @@
-import time
+import os
 
 from street_list_preprocessing.get_country_street_files import get_country_street_files
 from street_list_preprocessing.preprocess_country_streets import preprocess_country_streets
+from utils.env_variables import MERGED_STREET_DATA_FILE
 from utils.logger import get_logger
 
 logger = get_logger()
@@ -10,7 +11,10 @@ logger = get_logger()
 def preprocess_streets() -> None:
     logger.info("Preprocess street list for countries")
 
-    start_time = time.time()
+    # Remove previous results
+    output_file = MERGED_STREET_DATA_FILE
+    if os.path.exists(output_file):
+        os.remove(output_file)
 
     # Get a list of country street files
     countries = get_country_street_files()
@@ -21,8 +25,7 @@ def preprocess_streets() -> None:
 
     # Finished
     logger.info(
-        "Time spent in minutes: %s",
-        int(time.time() - start_time) / 60,
+        "Done",
     )
 
 

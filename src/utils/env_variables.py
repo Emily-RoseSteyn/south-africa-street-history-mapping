@@ -16,3 +16,5 @@ STREET_DATA_DIR = "data/streets"
 PROCESSED_STREET_DATA_DIR = "output/streets"
 
 STREET_OUTPUT_PREFIX = "processed"
+
+MERGED_STREET_DATA_FILE = "output/street_terms.csv"
