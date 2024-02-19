@@ -68,6 +68,9 @@ def preprocess_country_streets(country_file):
     df["name"] = df["name"].str.extract(r'(\D+)')
     df = df.dropna()
 
+    # Remove duplicates once more at this stage
+    df = df.groupby(['name']).agg({'frequency': 'max'}).reset_index()
+
     # Dropped words
     dropped_df = df[df['name'].str.len() < WORD_LENGTH_THRESHOLD]
     write_dataframe_to_csv(dropped_df, f"dropped_words_{file_name}")
