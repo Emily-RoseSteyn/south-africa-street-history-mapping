@@ -5,7 +5,12 @@ description = ""
 authors = ["Emily-Rose Steyn <emilyrosesteyn@gmail.com>"]
 license = "GPL3.0"
 readme = "README.md"
-packages = [{ include = "street_list_download", from = "src" }, { include = "utils", from = "src" }]
+packages = [
+    { include = "dictionary_builder", from = "src" },
+    { include = "street_list_download", from = "src" },
+    { include = "street_list_preprocessing", from = "src" },
+    { include = "utils", from = "src" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.10"
