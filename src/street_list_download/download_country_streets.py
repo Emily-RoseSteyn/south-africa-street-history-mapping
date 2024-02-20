@@ -21,7 +21,6 @@ def download_country_streets(country_code: str) -> Path:
     path = Path.joinpath(Path(output_dir), filename)
 
     # Don't requery from overpass if file exists
-    logger.info(f"test - {os.path.isfile(path)}")
     if os.path.isfile(path):
         logger.info(
             f"Item {path} already exists - skipping download"

@@ -21,7 +21,7 @@ def retrieve_street_list() -> None:
 
     # Might want to setup some stuff here
     if rank == 0:
-        logger.debug("I'm rank 0")
+        logger.info("I'm rank 0")
         if not os.path.exists(STREET_DATA_DIR):
             os.makedirs(STREET_DATA_DIR)
 
@@ -42,7 +42,7 @@ def retrieve_street_list() -> None:
         )
 
         # Do stuff here!
-        download_country_streets(country)
+        # download_country_streets(country)
 
     # End do stuff
 
