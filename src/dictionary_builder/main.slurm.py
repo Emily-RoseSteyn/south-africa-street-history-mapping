@@ -12,11 +12,10 @@ from utils.logger import get_logger
 
 logger = get_logger()
 
-conn = sqlite3.connect(SQLITE_DB)
+conn = sqlite3.connect(SQLITE_DB, timeout=10)
 
 
 def main(reset_db: bool = False) -> None:
-    logger.info("Retrieving street list for countries with slurm")
 
     start_time = time.time()
     rank = MPI.COMM_WORLD.Get_rank()
@@ -26,7 +25,6 @@ def main(reset_db: bool = False) -> None:
     country = extract_country()
     if country is None:
         return
-
     # Separate terms by country being processed
 
     country_terms = pd.read_sql_query(f"SELECT * FROM {MERGED_STREET_DATA_TABLE} WHERE country = ?", conn,
@@ -35,6 +33,7 @@ def main(reset_db: bool = False) -> None:
     # Might want to setup some stuff here
     if rank == 0:
         logger.debug("I'm rank 0")
+        logger.info(f"Building dictionary {country} with slurm")
         total_terms, number_unique_countries = initialise_terms_table(country, conn, reset_db)
 
         logger.info(
@@ -55,7 +54,7 @@ def main(reset_db: bool = False) -> None:
         )
 
         # Do stuff here!
-        build_dictionary_for_term(country, term)
+        build_dictionary_for_term(country, term, conn)
 
     # End do stuff
 

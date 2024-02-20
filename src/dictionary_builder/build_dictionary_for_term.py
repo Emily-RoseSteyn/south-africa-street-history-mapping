@@ -2,12 +2,10 @@ import sqlite3
 
 import pandas as pd
 
-from utils.env_variables import SQLITE_DB, TERMS_DICTIONARY_TABLE, MERGED_STREET_DATA_TABLE
-
-conn = sqlite3.connect(SQLITE_DB)
+from utils.env_variables import TERMS_DICTIONARY_TABLE, MERGED_STREET_DATA_TABLE
 
 
-def term_exists(country: str, term: str) -> bool:
+def term_exists(country: str, term: str, conn: sqlite3.Connection) -> bool:
     try:
         result = conn.execute(f"SELECT * FROM {country}_{TERMS_DICTIONARY_TABLE} WHERE term = ? LIMIT 1",
                               (term,)).fetchone()
@@ -16,22 +14,24 @@ def term_exists(country: str, term: str) -> bool:
         return False
 
 
-def match_term(term: str):
+def match_term(term: str, conn: sqlite3.Connection):
     # Decided to not remove the country being processed
-    return pd.read_sql(f"SELECT * FROM {MERGED_STREET_DATA_TABLE} WHERE term = ?", conn, params=[term])
+    return pd.read_sql(f"SELECT * FROM {MERGED_STREET_DATA_TABLE} WHERE term = ?", conn,
+                       params=[term])
 
 
-def write_df_to_sql(country: str, df: pd.DataFrame) -> None:
+def write_df_to_sql(country: str, df: pd.DataFrame, conn: sqlite3.Connection) -> None:
     df.to_sql(f"{country}_{TERMS_DICTIONARY_TABLE}", conn, if_exists='append', index=False)
 
 
-def build_dictionary_for_term(country: str, term: str):
+def build_dictionary_for_term(
+        country: str, term: str, conn: sqlite3.Connection) -> None:
     # Skip if term already exists
-    if term_exists(country, term):
+    if term_exists(country, term, conn):
         return
 
     # Query sql
-    exact_match = match_term(term)
+    exact_match = match_term(term, conn)
     number_matches = len(exact_match)
 
     # TODO: If term not found
@@ -51,4 +51,4 @@ def build_dictionary_for_term(country: str, term: str):
         # threshold_index = exact_match['likelihood'].cumsum().gt(threshold).idxmin() + 1
         # exact_match = exact_match.loc[:threshold_index]
 
-    write_df_to_sql(country, exact_match)
+    write_df_to_sql(country, exact_match, conn)

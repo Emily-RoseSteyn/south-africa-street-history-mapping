@@ -30,7 +30,7 @@ def build_dictionary(country: str, reset_db: bool = False) -> None:
 
     # Favour exact match over fuzzy
     for term in tqdm(country_terms["term"]):
-        build_dictionary_for_term(country, term)
+        build_dictionary_for_term(country, term, conn)
 
 
 def main() -> None:
