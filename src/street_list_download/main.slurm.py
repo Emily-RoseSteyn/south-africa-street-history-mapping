@@ -12,8 +12,6 @@ logger = get_logger()
 
 
 def retrieve_street_list() -> None:
-    logger.info("Retrieving street list for countries with slurm")
-
     start_time = time.time()
     rank = MPI.COMM_WORLD.Get_rank()
     size = MPI.COMM_WORLD.Get_size()
@@ -27,6 +25,7 @@ def retrieve_street_list() -> None:
 
     # Make sure rank 0 has done its stuff before moving on
     MPI.COMM_WORLD.Barrier()
+    logger.info("Retrieving street list for countries with slurm")
 
     # Get a list of countries
     countries = COUNTRY_ISO_MAP.keys()
@@ -42,7 +41,7 @@ def retrieve_street_list() -> None:
         )
 
         # Do stuff here!
-        # download_country_streets(country)
+        download_country_streets(country)
 
     # End do stuff
 
