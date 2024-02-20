@@ -167,3 +167,4 @@ data/*
 
 output/*
 !output/.gitkeep
+.python-version
