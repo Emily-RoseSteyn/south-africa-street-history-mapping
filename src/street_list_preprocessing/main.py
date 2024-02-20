@@ -1,20 +1,20 @@
-import os
+import sqlite3
 
 from street_list_preprocessing.get_country_street_files import get_country_street_files
 from street_list_preprocessing.preprocess_country_streets import preprocess_country_streets
-from utils.env_variables import MERGED_STREET_DATA_FILE
+from utils.env_variables import SQLITE_DB, MERGED_STREET_DATA_TABLE
 from utils.logger import get_logger
 
 logger = get_logger()
+
+conn = sqlite3.connect(SQLITE_DB)
 
 
 def preprocess_streets() -> None:
     logger.info("Preprocess street list for countries")
 
     # Remove previous results
-    output_file = MERGED_STREET_DATA_FILE
-    if os.path.exists(output_file):
-        os.remove(output_file)
+    conn.execute(f"DROP TABLE IF EXISTS {MERGED_STREET_DATA_TABLE}")
 
     # Get a list of country street files
     countries = get_country_street_files()
@@ -30,7 +30,8 @@ def preprocess_streets() -> None:
 
 
 def main() -> None:
-    preprocess_streets()
+    with conn:
+        preprocess_streets()
 
 
 if __name__ == "__main__":

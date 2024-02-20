@@ -1,14 +1,17 @@
 import os
+import sqlite3
 from pathlib import Path
 
 import pandas as pd
 
 from utils.country_iso_map import COUNTRY_ISO_CODE_NAME_MAP
 from utils.env_variables import PROCESSED_STREET_DATA_DIR, WORD_LENGTH_THRESHOLD, STREET_OUTPUT_PREFIX, \
-    MERGED_STREET_DATA_FILE
+    SQLITE_DB, MERGED_STREET_DATA_TABLE
 from utils.logger import get_logger
 
 logger = get_logger()
+
+conn = sqlite3.connect(SQLITE_DB)
 
 
 def write_dataframe_to_csv(df: pd.DataFrame, file_name: str):
@@ -21,12 +24,8 @@ def write_dataframe_to_csv(df: pd.DataFrame, file_name: str):
     df.to_csv(output_file, index=False)
 
 
-def write_to_merged_csv(df: pd.DataFrame):
-    output_file = MERGED_STREET_DATA_FILE
-    if not os.path.exists(output_file):
-        df.to_csv(output_file, index=False)
-    else:
-        df.to_csv(output_file, index=False, mode="a", header=False)
+def write_to_sql(df: pd.DataFrame):
+    df.to_sql(MERGED_STREET_DATA_TABLE, conn, if_exists='append', index=False)
 
 
 def preprocess_country_streets(country_file):
@@ -99,7 +98,7 @@ def preprocess_country_streets(country_file):
     prefix = STREET_OUTPUT_PREFIX
     write_dataframe_to_csv(df, f"{prefix}_{file_name}")
 
-    # Write to merged csv
-    write_to_merged_csv(df)
+    # Write to merged SQL table
+    write_to_sql(df)
 
     logger.info('\n')

@@ -19,7 +19,7 @@ PROCESSED_STREET_DATA_DIR = "output/streets"
 STREET_OUTPUT_PREFIX = "processed"
 
 MERGED_STREET_DATA_FILE = "output/street_terms.csv"
-TERMS_DICTIONARY = "terms_dictionary.csv"
 
 SQLITE_DB = "output/street_history.sqlite"
 TERMS_DICTIONARY_TABLE = "terms_dictionary"
+MERGED_STREET_DATA_TABLE = "street_terms"
