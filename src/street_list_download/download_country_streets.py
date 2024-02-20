@@ -25,7 +25,7 @@ def download_country_streets(country_code: str) -> None:
         logger.info(
             f"Item {path} already exists - skipping download"
         )
-        return path
+        return
 
     iso_standard = COUNTRY_ISO_MAP[country_code]
     overpass_url = "https://overpass-api.de/api/interpreter"

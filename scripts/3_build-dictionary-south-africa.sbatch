@@ -3,7 +3,7 @@
 #SBATCH --output=logs/%x-%A_%a.out.log
 #SBATCH --error=logs/%x-%A_%a.err.log
 #SBATCH --cpus-per-task 1
-#SBATCH --ntasks=12
+#SBATCH --ntasks=32
 
 # Python unbuffered for logs
 export PYTHONUNBUFFERED=TRUE
