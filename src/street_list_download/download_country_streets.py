@@ -10,7 +10,7 @@ from utils.logger import get_logger
 logger = get_logger()
 
 
-def download_country_streets(country_code: str) -> Path:
+def download_country_streets(country_code: str) -> None:
     country = COUNTRY_ISO_CODE_NAME_MAP[country_code]
 
     output_dir = STREET_DATA_DIR
@@ -35,10 +35,14 @@ def download_country_streets(country_code: str) -> Path:
     way(area)[highway][name];
     out;
     """
+    print(overpass_query)
     response = requests.get(overpass_url,
                             params={'data': overpass_query})
+
+    if response.status_code != 200:
+        logger.error(f"Failed to download streets for {country} with error code {response.status_code}")
+        raise Exception(f"Status code {response.status_code} received")
 
     with open(path, mode='wb') as file:
         file.write(response.content)
         file.close()
-    return path
