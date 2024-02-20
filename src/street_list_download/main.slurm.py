@@ -1,9 +1,11 @@
+import os
 import time
 
 from mpi4py import MPI
 
-from utils.country_iso_map import COUNTRY_ISO_MAP
 from street_list_download.download_country_streets import download_country_streets
+from utils.country_iso_map import COUNTRY_ISO_MAP
+from utils.env_variables import STREET_DATA_DIR
 from utils.logger import get_logger
 
 logger = get_logger()
@@ -20,6 +22,8 @@ def retrieve_street_list() -> None:
     # Might want to setup some stuff here
     if rank == 0:
         logger.debug("I'm rank 0")
+        if not os.path.exists(STREET_DATA_DIR):
+            os.makedirs(STREET_DATA_DIR)
 
     # Make sure rank 0 has done its stuff before moving on
     MPI.COMM_WORLD.Barrier()

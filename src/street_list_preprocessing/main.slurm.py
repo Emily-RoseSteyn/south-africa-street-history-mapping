@@ -1,3 +1,4 @@
+import os
 import sqlite3
 import time
 
@@ -5,7 +6,7 @@ from mpi4py import MPI
 
 from street_list_preprocessing.get_country_street_files import get_country_street_files
 from street_list_preprocessing.preprocess_country_streets import preprocess_country_streets
-from utils.env_variables import SQLITE_DB, MERGED_STREET_DATA_TABLE
+from utils.env_variables import SQLITE_DB, MERGED_STREET_DATA_TABLE, PROCESSED_STREET_DATA_DIR
 from utils.logger import get_logger
 
 logger = get_logger()
@@ -24,6 +25,9 @@ def preprocess_streets() -> None:
     # Might want to setup some stuff here
     if rank == 0:
         logger.debug("I'm rank 0")
+
+        if not os.path.exists(PROCESSED_STREET_DATA_DIR):
+            os.makedirs(PROCESSED_STREET_DATA_DIR)
 
     # Make sure rank 0 has done its stuff before moving on
     MPI.COMM_WORLD.Barrier()
