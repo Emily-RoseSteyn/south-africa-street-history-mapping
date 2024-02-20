@@ -5,8 +5,8 @@ import pandas as pd
 from tqdm import tqdm
 
 from utils.country_iso_map import COUNTRY_ISO_CODE_NAME_MAP
-from utils.env_variables import MERGED_STREET_DATA_FILE, FUZZY_MATCH_THRESHOLD, SQLITE_DB, \
-    TERMS_DICTIONARY_TABLE
+from utils.env_variables import SQLITE_DB, \
+    TERMS_DICTIONARY_TABLE, MERGED_STREET_DATA_TABLE
 from utils.logger import get_logger
 
 logger = get_logger()
@@ -30,7 +30,9 @@ def write_df_to_sql(country: str, df: pd.DataFrame) -> None:
 
 def build_dictionary(country: str, reset_db: bool = False) -> None:
     logger.info(f"Building dictionary of street origins for country {country}")
-    terms_df = pd.read_csv(MERGED_STREET_DATA_FILE)
+
+    # Reading merged street data from previous step
+    terms_df = pd.read_sql_query(f"SELECT * FROM {MERGED_STREET_DATA_TABLE}", conn)
 
     # Initialise db and table
     if reset_db:
@@ -42,7 +44,9 @@ def build_dictionary(country: str, reset_db: bool = False) -> None:
     # Decided to not remove the country being processed
     # terms_df = terms_df[terms_df["country"] != country]
     number_unique_countries = len(terms_df["country"].unique())
-    logger.info(f"Comparing terms from {country} to {number_unique_countries} other countries")
+    logger.info(
+        f"Comparing {len(country_terms)} terms from {country} to {len(terms_df)} terms from " +
+        f"{number_unique_countries} countries (including {country})")
 
     # Favour exact match over fuzzy
     for term in tqdm(country_terms["term"]):

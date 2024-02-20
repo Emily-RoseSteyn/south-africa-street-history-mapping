@@ -5,8 +5,7 @@ from pathlib import Path
 import pandas as pd
 
 from utils.country_iso_map import COUNTRY_ISO_CODE_NAME_MAP
-from utils.env_variables import PROCESSED_STREET_DATA_DIR, WORD_LENGTH_THRESHOLD, STREET_OUTPUT_PREFIX, \
-    SQLITE_DB, MERGED_STREET_DATA_TABLE
+from utils.env_variables import PROCESSED_STREET_DATA_DIR, WORD_LENGTH_THRESHOLD, SQLITE_DB, MERGED_STREET_DATA_TABLE
 from utils.logger import get_logger
 
 logger = get_logger()
@@ -95,8 +94,7 @@ def preprocess_country_streets(country_file):
 
     # Save dataframe of specific street terms - term, frequency, country, country_iso_code
     df = df.rename(columns={"name": "term"})
-    prefix = STREET_OUTPUT_PREFIX
-    write_dataframe_to_csv(df, f"{prefix}_{file_name}")
+    write_dataframe_to_csv(df, f"processed_{file_name}")
 
     # Write to merged SQL table
     write_to_sql(df)

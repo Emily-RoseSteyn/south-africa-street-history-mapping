@@ -16,10 +16,6 @@ FUZZY_MATCH_THRESHOLD = 80
 STREET_DATA_DIR = "data/streets"
 PROCESSED_STREET_DATA_DIR = "output/streets"
 
-STREET_OUTPUT_PREFIX = "processed"
-
-MERGED_STREET_DATA_FILE = "output/street_terms.csv"
-
 SQLITE_DB = "output/street_history.sqlite"
 TERMS_DICTIONARY_TABLE = "terms_dictionary"
 MERGED_STREET_DATA_TABLE = "street_terms"
