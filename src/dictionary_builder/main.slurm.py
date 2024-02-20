@@ -4,10 +4,10 @@ import time
 import pandas as pd
 from mpi4py import MPI
 
-from dictionary_builder.build_dictionary_for_term import build_dictionary_for_term
+from dictionary_builder.build_dictionary_for_term import build_dictionary_for_term, write_df_to_sql
 from dictionary_builder.extract_country_from_args import extract_country
 from dictionary_builder.initialise_terms_table import initialise_terms_table
-from utils.env_variables import SQLITE_DB, MERGED_STREET_DATA_TABLE
+from utils.env_variables import SQLITE_DB, MERGED_STREET_DATA_TABLE, MPI_TAGS
 from utils.logger import get_logger
 
 logger = get_logger()
@@ -17,9 +17,11 @@ def main(reset_db: bool = False) -> None:
     local_conn = sqlite3.connect(SQLITE_DB, timeout=10)
 
     start_time = time.time()
-    rank = MPI.COMM_WORLD.Get_rank()
-    size = MPI.COMM_WORLD.Get_size()
+    comm = MPI.COMM_WORLD  # get MPI communicator object
+    rank = comm.Get_rank()
+    size = comm.Get_size()
     name = MPI.Get_processor_name()
+    status = MPI.Status()   # get MPI status object
 
     country = extract_country()
     if country is None:
@@ -39,6 +41,16 @@ def main(reset_db: bool = False) -> None:
             f"Comparing {len(country_terms)} terms from {country} to {total_terms} terms from " +
             f"{number_unique_countries} countries (including {country})")
 
+        num_workers = size - 1
+        logger.info("Master starting with %d workers" % num_workers)
+        source = status.Get_source()
+        tag = status.Get_tag()
+        if tag == MPI_TAGS.DONE:
+            results = comm.recv(source=MPI.ANY_SOURCE, tag=MPI.ANY_TAG, status=status)
+            logger.info("Got data from worker %d" % source)
+            logger.info(results)
+            # write_df_to_sql(country, results, local_conn)
+
     # Make sure rank 0 has done its stuff before moving on
     MPI.COMM_WORLD.Barrier()
 
@@ -54,7 +66,7 @@ def main(reset_db: bool = False) -> None:
             )
 
             # Do stuff here!
-            build_dictionary_for_term(country, term, local_conn)
+            build_dictionary_for_term(country, term, local_conn, mpi_comm=comm)
 
     # End do stuff
 

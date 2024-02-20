@@ -1,8 +1,9 @@
 import sqlite3
+from typing import Any
 
 import pandas as pd
 
-from utils.env_variables import TERMS_DICTIONARY_TABLE, MERGED_STREET_DATA_TABLE
+from utils.env_variables import TERMS_DICTIONARY_TABLE, MERGED_STREET_DATA_TABLE, MPI_TAGS
 
 
 def term_exists(country: str, term: str, conn: sqlite3.Connection) -> bool:
@@ -20,12 +21,23 @@ def match_term(term: str, conn: sqlite3.Connection):
                        params=[term])
 
 
-def write_df_to_sql(country: str, df: pd.DataFrame, conn: sqlite3.Connection) -> None:
-    df.to_sql(f"{country}_{TERMS_DICTIONARY_TABLE}", conn, if_exists='append', index=False)
+def write_df_to_sql(
+        country: str,
+        df: pd.DataFrame,
+        conn: sqlite3.Connection,
+        mpi_comm: Any = None) -> None:
+    if mpi_comm is None:
+        df.to_sql(
+            f"{country}_{TERMS_DICTIONARY_TABLE}",
+            conn,
+            if_exists='append',
+            index=False)
+    else:
+        mpi_comm.send(df, dest=0, tag=MPI_TAGS.DONE)
 
 
 def build_dictionary_for_term(
-        country: str, term: str, conn: sqlite3.Connection) -> None:
+        country: str, term: str, conn: sqlite3.Connection, mpi_comm=None) -> None:
     # Skip if term already exists
     if term_exists(country, term, conn):
         return
@@ -51,4 +63,4 @@ def build_dictionary_for_term(
         # threshold_index = exact_match['likelihood'].cumsum().gt(threshold).idxmin() + 1
         # exact_match = exact_match.loc[:threshold_index]
 
-    write_df_to_sql(country, exact_match, conn)
+    write_df_to_sql(country, exact_match, conn, mpi_comm)
