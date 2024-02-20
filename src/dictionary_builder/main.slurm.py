@@ -42,14 +42,19 @@ def main(reset_db: bool = False) -> None:
             f"{number_unique_countries} countries (including {country})")
 
         num_workers = size - 1
+        closed_workers = 0
         logger.info("Master starting with %d workers" % num_workers)
-        source = status.Get_source()
-        tag = status.Get_tag()
-        if tag == MPI_TAGS.DONE:
-            results = comm.recv(source=MPI.ANY_SOURCE, tag=MPI.ANY_TAG, status=status)
-            logger.info("Got data from worker %d" % source)
-            logger.info(results)
-            # write_df_to_sql(country, results, local_conn)
+        while closed_workers < num_workers:
+            source = status.Get_source()
+            tag = status.Get_tag()
+            if tag == MPI_TAGS.DONE:
+                results = comm.recv(source=MPI.ANY_SOURCE, tag=MPI.ANY_TAG, status=status)
+                logger.info(f"Got data from worker {source}")
+                logger.info(results)
+                # write_df_to_sql(country, results, local_conn)
+            elif tag == MPI_TAGS.EXIT:
+                logger.info(f"Worker {source} exited.")
+                closed_workers += 1
 
     # Make sure rank 0 has done its stuff before moving on
     MPI.COMM_WORLD.Barrier()
@@ -67,7 +72,7 @@ def main(reset_db: bool = False) -> None:
 
             # Do stuff here!
             build_dictionary_for_term(country, term, local_conn, mpi_comm=comm)
-
+        comm.send(None, dest=0, tag=MPI_TAGS.EXIT)
     # End do stuff
 
     # Finished
