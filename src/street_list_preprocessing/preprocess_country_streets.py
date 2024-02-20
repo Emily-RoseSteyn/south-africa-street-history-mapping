@@ -95,7 +95,7 @@ def preprocess_country_streets(country_file):
     df['iso_code'] = iso_code
 
     # Save dataframe of specific street terms - term, frequency, country, country_iso_code
-    df.rename(columns={"name": "term"})
+    df = df.rename(columns={"name": "term"})
     prefix = STREET_OUTPUT_PREFIX
     write_dataframe_to_csv(df, f"{prefix}_{file_name}")
 
