@@ -17,9 +17,12 @@ FUZZY_MATCH_THRESHOLD = 80
 
 STREET_DATA_DIR = "data/streets"
 PROCESSED_STREET_DATA_DIR = "output/streets"
+OUTPUT_IMAGES_DIR = "output/images"
 
 SQLITE_DB = "output/street_history.sqlite"
 MERGED_STREET_DATA_TABLE = "street_terms"
 TERMS_DICTIONARY_TABLE = "terms_dictionary"
 
 MPI_TAGS = enum('READY', 'DONE', 'EXIT', 'START')
+
+PUNCTUATION = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"

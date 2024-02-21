@@ -2,8 +2,9 @@ import sqlite3
 
 import pandas as pd
 
+from mapping.country_colour_map import get_colour
+from mapping.stop_terms import STOP_TERMS
 from utils.env_variables import SQLITE_DB, TERMS_DICTIONARY_TABLE
-from utils.stop_terms import STOP_TERMS
 
 conn = sqlite3.connect(SQLITE_DB)
 
@@ -33,5 +34,8 @@ def map_street_to_origin(x):
     if isinstance(street_name, str):
         origin = lookup_origin(street_name)
         x["origin"] = origin
+    else:
+        x["origin"] = None
+    x["colour"]  = get_colour(x["origin"])
 
     return x
