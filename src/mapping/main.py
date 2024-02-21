@@ -1,6 +1,6 @@
-import datetime
 import os.path
 import sys
+from datetime import datetime
 from time import time
 
 import geopandas as gpd
@@ -74,7 +74,8 @@ def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 
         os.makedirs(output_dir)
 
     # Save figure
-    output_path = os.path.join(output_dir, f"{processed_place_name}_{datetime.datetime}.png")
+    timestamp = datetime.now().strftime('%Y-%m-%d_%H:%M')
+    output_path = os.path.join(output_dir, f"{timestamp}_{processed_place_name}.png")
     map_fig.savefig(output_path, dpi=300, bbox_inches='tight', format="png",
                     facecolor=DEFAULT_BACKGROUND_COLOUR, transparent=False)
 
