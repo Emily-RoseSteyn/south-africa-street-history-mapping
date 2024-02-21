@@ -48,18 +48,16 @@ def main(reset_db: bool = False) -> None:
             source = status.Get_source()
             tag = status.Get_tag()
             results = comm.recv(source=MPI.ANY_SOURCE, tag=MPI.ANY_TAG, status=status)
-            logger.info(f"Got data from worker {source}, {tag}")
-            print(results)
+            logger.info(f"Got data from worker {source}")
             if tag == MPI_TAGS.DONE:
-                results = comm.recv(source=MPI.ANY_SOURCE, tag=MPI.ANY_TAG, status=status)
-                logger.info(f"Got data from worker {source}")
                 logger.info(results)
-                # write_df_to_sql(country, results, local_conn)
+                write_df_to_sql(country, results, local_conn)
             elif tag == MPI_TAGS.EXIT:
                 logger.info(f"Worker {source} exited.")
                 closed_workers += 1
 
     # Make sure rank 0 has done its stuff before moving on
+    # TODO: Add this back in for terms table
     # MPI.COMM_WORLD.Barrier()
 
     else:
