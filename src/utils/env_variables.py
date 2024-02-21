@@ -18,6 +18,8 @@ FUZZY_MATCH_THRESHOLD = 80
 STREET_DATA_DIR = "data/streets"
 PROCESSED_STREET_DATA_DIR = "output/streets"
 OUTPUT_IMAGES_DIR = "output/images"
+OUTPUT_GDF_DIR = "output/geojson"
+OUTPUT_GRAPH_DIR = "output/graphs"
 
 SQLITE_DB = "output/street_history.sqlite"
 MERGED_STREET_DATA_TABLE = "street_terms"

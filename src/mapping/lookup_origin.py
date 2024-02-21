@@ -36,6 +36,6 @@ def map_street_to_origin(x):
         x["origin"] = origin
     else:
         x["origin"] = None
-    x["colour"]  = get_colour(x["origin"])
+    x["colour"] = get_colour(x["origin"])
 
     return x
