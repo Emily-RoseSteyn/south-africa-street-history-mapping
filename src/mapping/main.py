@@ -74,7 +74,7 @@ def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 
         os.makedirs(output_dir)
 
     # Save figure
-    timestamp = datetime.now().strftime('%Y-%m-%d_%H:%M')
+    timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M')
     output_path = os.path.join(output_dir, f"{timestamp}_{processed_place_name}.png")
     map_fig.savefig(output_path, dpi=300, bbox_inches='tight', format="png",
                     facecolor=DEFAULT_BACKGROUND_COLOUR, transparent=False)
