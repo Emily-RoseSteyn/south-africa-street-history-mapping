@@ -57,30 +57,31 @@ def main(reset_db: bool = False) -> None:
                 closed_workers += 1
 
     # Make sure rank 0 has done its stuff before moving on
-    MPI.COMM_WORLD.Barrier()
+    # MPI.COMM_WORLD.Barrier()
 
-    # For each country
-    with local_conn:
-        for index, term in enumerate(country_terms["term"]):
-            # If there are still files to process and processor is ready
-            if index % size != rank:
-                continue
+    else:
+        # For each country
+        with local_conn:
+            for index, term in enumerate(country_terms["term"]):
+                # If there are still files to process and processor is ready
+                if index % size != rank:
+                    continue
 
-            logger.debug(
-                f"Item {term} is being done by processor {rank} ({name}) of {size}"
-            )
+                logger.info(
+                    f"Item {term} is being done by processor {rank} ({name}) of {size}"
+                )
 
-            # Do stuff here!
-            build_dictionary_for_term(country, term, local_conn, mpi_comm=comm)
-        comm.send(None, dest=0, tag=MPI_TAGS.EXIT)
-    # End do stuff
+                # Do stuff here!
+                build_dictionary_for_term(country, term, local_conn, mpi_comm=comm)
+            comm.send(None, dest=0, tag=MPI_TAGS.EXIT)
+        # End do stuff
 
-    # Finished
-    logger.debug(
-        "Node %s time spent in minutes: %s",
-        ((rank - 1) % size),
-        int(time.time() - start_time) / 60,
-    )
+        # Finished
+        logger.info(
+            "Node %s time spent in minutes: %s",
+            ((rank - 1) % size),
+            int(time.time() - start_time) / 60,
+        )
 
 
 if __name__ == "__main__":
