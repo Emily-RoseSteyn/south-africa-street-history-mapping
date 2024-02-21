@@ -47,6 +47,9 @@ def main(reset_db: bool = False) -> None:
         while closed_workers < num_workers:
             source = status.Get_source()
             tag = status.Get_tag()
+            results = comm.recv(source=MPI.ANY_SOURCE, tag=MPI.ANY_TAG, status=status)
+            logger.info(f"Got data from worker {source}, {tag}")
+            print(results)
             if tag == MPI_TAGS.DONE:
                 results = comm.recv(source=MPI.ANY_SOURCE, tag=MPI.ANY_TAG, status=status)
                 logger.info(f"Got data from worker {source}")
@@ -67,7 +70,7 @@ def main(reset_db: bool = False) -> None:
                 if index % size != rank:
                     continue
 
-                logger.info(
+                logger.debug(
                     f"Item {term} is being done by processor {rank} ({name}) of {size}"
                 )
 
