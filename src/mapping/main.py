@@ -12,11 +12,11 @@ from utils.logger import get_logger
 logger = get_logger()
 
 
-def map_origin_of_address(address: str) -> None:
-    logger.info(f"Mapping origins of address {address}")
+def map_origin_of_address(address: str, dist: int = 1000) -> None:
+    logger.info(f"Mapping origins of address {address} within {dist} meters")
 
     # Getting OSMNX graph from address
-    graph = ox.graph_from_address(address, network_type='drive')
+    graph = ox.graph_from_address(address, network_type='drive', simplify=True, retain_all=True, dist=dist)
 
     # Convert to geopandas
     gdf = ox.graph_to_gdfs(graph, nodes=False)
@@ -50,7 +50,14 @@ def main() -> None:
 
     address = sys.argv[1]
 
-    map_origin_of_address(address)
+    distance = 1000
+    if len(sys.argv) > 2:
+        try:
+            distance = int(sys.argv[2])
+        except ValueError:
+            logger.error(f"Distance not an integer. Carrying on with distance = {distance}")
+
+    map_origin_of_address(address, distance)
 
 
 if __name__ == "__main__":
