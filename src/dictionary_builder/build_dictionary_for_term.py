@@ -27,7 +27,7 @@ def write_df_to_sql(
         conn: sqlite3.Connection,
         mpi_comm: Any = None) -> None:
     if df is None:
-        return 
+        return
     if mpi_comm is None:
         df.to_sql(
             f"{country}_{TERMS_DICTIONARY_TABLE}",

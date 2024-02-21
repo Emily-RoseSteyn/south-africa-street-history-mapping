@@ -50,7 +50,6 @@ def main(reset_db: bool = False) -> None:
             results = comm.recv(source=MPI.ANY_SOURCE, tag=MPI.ANY_TAG, status=status)
             logger.info(f"Got data from worker {source}")
             if tag == MPI_TAGS.DONE:
-                logger.info(results)
                 write_df_to_sql(country, results, local_conn)
             elif tag == MPI_TAGS.EXIT:
                 logger.info(f"Worker {source} exited.")
