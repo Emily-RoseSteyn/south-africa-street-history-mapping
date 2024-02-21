@@ -26,6 +26,8 @@ def write_df_to_sql(
         df: pd.DataFrame,
         conn: sqlite3.Connection,
         mpi_comm: Any = None) -> None:
+    if df is None:
+        return 
     if mpi_comm is None:
         df.to_sql(
             f"{country}_{TERMS_DICTIONARY_TABLE}",
