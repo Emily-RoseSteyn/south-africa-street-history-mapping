@@ -24,6 +24,7 @@ OUTPUT_GRAPH_DIR = "output/graphs"
 SQLITE_DB = "output/street_history.sqlite"
 MERGED_STREET_DATA_TABLE = "street_terms"
 TERMS_DICTIONARY_TABLE = "terms_dictionary"
+TERMS_LANGUAGE_DICTIONARY_TABLE = "terms_language_dictionary"
 
 MPI_TAGS = enum('READY', 'DONE', 'EXIT', 'START')
 

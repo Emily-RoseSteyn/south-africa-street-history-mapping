@@ -7,6 +7,7 @@ license = "GPL3.0"
 readme = "README.md"
 packages = [
     { include = "dictionary_builder", from = "src" },
+    { include = "lookup_language", from = "src" },
     { include = "mapping", from = "src" },
     { include = "street_list_download", from = "src" },
     { include = "street_list_preprocessing", from = "src" },
@@ -31,6 +32,7 @@ tqdm = "^4.66.2"
 folium = "^0.15.1"
 mapclassify = "^2.6.1"
 pickleshare = "^0.7.5"
+lingua-language-detector = "^2.0.2"
 
 
 [build-system]
