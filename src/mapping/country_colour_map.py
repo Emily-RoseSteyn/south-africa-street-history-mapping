@@ -37,8 +37,12 @@ def country_colour_map_static():
         COUNTRY_ISO_CODE_NAME_MAP["PT"]: "#ffec4f",
         COUNTRY_ISO_CODE_NAME_MAP["GB-SCT"]: "#91a4ff",
         COUNTRY_ISO_CODE_NAME_MAP["ES"]: "#800080",
-        COUNTRY_ISO_CODE_NAME_MAP["GB-WLS"]: "#ccebc5"
-
+        COUNTRY_ISO_CODE_NAME_MAP["GB-WLS"]: "#ccebc5",
+        "afrikaans": "#a65628",
+        "english": "#66c2a5",
+        "sotho": "#a6761d",
+        "xhosa": "#d95f02",
+        "zulu": "#f781bf",
     }
 
 

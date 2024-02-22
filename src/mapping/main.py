@@ -15,11 +15,14 @@ from utils.logger import get_logger
 logger = get_logger()
 
 
-def get_gdf(address, graph, processed_place_name, dist):
+def get_gdf(address, graph, processed_place_name, dist, map_language):
     gdf_output_dir = OUTPUT_GDF_DIR
     if not os.path.exists(gdf_output_dir):
         os.makedirs(gdf_output_dir)
-    gdf_output_path = os.path.join(gdf_output_dir, f"{processed_place_name}_{dist}.parquet")
+
+    filename = f"{processed_place_name}_{dist}_language.parquet" if map_language \
+        else f"{processed_place_name}_{dist}.parquet"
+    gdf_output_path = os.path.join(gdf_output_dir, filename)
 
     if os.path.isfile(gdf_output_path):
         logger.info(f"Found existing parquet for {address}")
@@ -28,7 +31,7 @@ def get_gdf(address, graph, processed_place_name, dist):
     # Otherwise, convert to geopandas
     gdf = ox.graph_to_gdfs(graph, nodes=False)
     # Map street origins with colours
-    gdf = gdf.apply(lambda x: map_street_to_origin(x), axis=1)
+    gdf = gdf.apply(lambda x: map_street_to_origin(x, map_language), axis=1)
 
     # Save
     gdf = gpd.GeoDataFrame(gdf[["origin", "colour", "geometry"]], index=gdf.index)
@@ -39,7 +42,8 @@ def get_gdf(address, graph, processed_place_name, dist):
     return gdf
 
 
-def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 2) -> tuple[Any, Any, Any]:
+def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 2, map_language=False
+                          ) -> tuple[Any, Any, Any]:
     processed_place_name = address.split(',')[0].strip(PUNCTUATION).replace(' ', '_').lower()
     logger.info(f"Mapping origins of address {address} within {dist} meters")
     start_time = time()
@@ -50,7 +54,7 @@ def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 
     logger.info(f"Retrieved graph for address {address}")
 
     # Getting geodataframe with colours
-    gdf = get_gdf(address, graph, processed_place_name, dist)
+    gdf = get_gdf(address, graph, processed_place_name, dist, map_language)
 
     logger.info(f"Plotting...")
     # Map coloured streets on graph
