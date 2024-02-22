@@ -2,7 +2,6 @@ import sqlite3
 
 import osmnx as ox
 import pandas as pd
-from matplotlib import colors
 from matplotlib.patches import Patch
 from mizani.colors.brewer.qualitative import Set2
 
@@ -26,7 +25,7 @@ def country_colour_map_dynamic():
 
 def country_colour_map_static():
     return {
-        COUNTRY_ISO_CODE_NAME_MAP["ZA"]: colors.hex2color("#e5c494"),
+        COUNTRY_ISO_CODE_NAME_MAP["ZA"]: "#e5c494",
         COUNTRY_ISO_CODE_NAME_MAP["BE"]: "#ffd000",
         COUNTRY_ISO_CODE_NAME_MAP["GB-ENG"]: "#66c2a5",
         COUNTRY_ISO_CODE_NAME_MAP["FR"]: "#ffa886",
@@ -43,8 +42,8 @@ def country_colour_map_static():
     }
 
 
-DEFAULT_COLOUR = colors.hex2color("#d9d9d9")
-DEFAULT_BACKGROUND_COLOUR = colors.hex2color("#ffffff")
+DEFAULT_COLOUR = "#d9d9d9"
+DEFAULT_BACKGROUND_COLOUR = "#ffffff"
 COLOUR_MAP = country_colour_map_static()
 
 

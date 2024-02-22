@@ -2,6 +2,7 @@ import os.path
 import sys
 from datetime import datetime
 from time import time
+from typing import Any
 
 import geopandas as gpd
 import osmnx as ox
@@ -14,35 +15,31 @@ from utils.logger import get_logger
 logger = get_logger()
 
 
-def get_gdf(address, graph, processed_place_name):
+def get_gdf(address, graph, processed_place_name, dist):
     gdf_output_dir = OUTPUT_GDF_DIR
     if not os.path.exists(gdf_output_dir):
         os.makedirs(gdf_output_dir)
-    gdf_output_path = os.path.join(gdf_output_dir, f"{processed_place_name}.geojson")
+    gdf_output_path = os.path.join(gdf_output_dir, f"{processed_place_name}_{dist}.parquet")
 
     if os.path.isfile(gdf_output_path):
-        return gpd.read_file(gdf_output_path)
+        logger.info(f"Found existing parquet for {address}")
+        return gpd.read_parquet(gdf_output_path)
 
     # Otherwise, convert to geopandas
     gdf = ox.graph_to_gdfs(graph, nodes=False)
-    logger.info(f"Converted to geopandas for address {address}")
     # Map street origins with colours
     gdf = gdf.apply(lambda x: map_street_to_origin(x), axis=1)
 
-    # gdf_output_dir = OUTPUT_GDF_DIR
-    # if not os.path.exists(gdf_output_dir):
-    #     os.makedirs(gdf_output_dir)
-    # gdf_output_path = os.path.join(gdf_output_dir, f"{processed_place_name}.geojson")
-
     # Save
-    # TODO: OSMNX format prevents saving in geojson easily
-    # gdf.to_file(gdf_output_path, driver="GeoJSON")
-    # logger.info(f"Saved to {gdf_output_path}")
+    gdf = gpd.GeoDataFrame(gdf[["origin", "colour", "geometry"]], index=gdf.index)
+    gdf.to_parquet(gdf_output_path)
+
     logger.info(f"Mapped origins and colours for {address}.")
+    logger.info(f"Saved parquet to {gdf_output_path}")
     return gdf
 
 
-def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 2) -> None:
+def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 2) -> tuple[Any, Any, Any]:
     processed_place_name = address.split(',')[0].strip(PUNCTUATION).replace(' ', '_').lower()
     logger.info(f"Mapping origins of address {address} within {dist} meters")
     start_time = time()
@@ -53,12 +50,12 @@ def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 
     logger.info(f"Retrieved graph for address {address}")
 
     # Getting geodataframe with colours
-    gdf = get_gdf(address, graph, processed_place_name)
+    gdf = get_gdf(address, graph, processed_place_name, dist)
 
     logger.info(f"Plotting...")
     # Map coloured streets on graph
     map_fig, map_ax = ox.plot_graph(graph, node_size=0,
-                                    dpi=100, bgcolor=DEFAULT_BACKGROUND_COLOUR,
+                                    dpi=300, bgcolor=DEFAULT_BACKGROUND_COLOUR,
                                     save=False, edge_color=gdf["colour"],
                                     edge_linewidth=edge_linewidth, edge_alpha=1, show=False)
 
@@ -84,8 +81,10 @@ def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 
     logger.info(
         f"Finished mapping! Time spent in minutes: {process_time}")
 
+    return graph, gdf, map_fig
 
-def main() -> None:
+
+def main() -> tuple[Any, Any, Any] | None:
     if len(sys.argv) < 2:
         logger.error("Please provide an address to map")
         return None
@@ -106,7 +105,7 @@ def main() -> None:
         except ValueError:
             logger.error(f"Edge line width is not an integer. Carrying on with distance = {edge_line_width}")
 
-    map_origin_of_address(address, distance, edge_line_width)
+    return map_origin_of_address(address, distance, edge_line_width)
 
 
 if __name__ == "__main__":

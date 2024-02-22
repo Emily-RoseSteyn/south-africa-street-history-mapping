@@ -30,6 +30,7 @@ thefuzz = "^0.22.1"
 tqdm = "^4.66.2"
 folium = "^0.15.1"
 mapclassify = "^2.6.1"
+pickleshare = "^0.7.5"
 
 
 [build-system]
