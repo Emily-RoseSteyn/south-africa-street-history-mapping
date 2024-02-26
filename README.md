@@ -145,6 +145,8 @@ rsync -avm --include='*/' --include='*.osm.pbf' --exclude='*' ./data ${REMOTE}:$
 
 ## Dictionary Generation
 
+[//]: # (TODO: Document this some more)
+
 #### 1. List Open Street Maps Locations
 
 ## Relevant Notebooks

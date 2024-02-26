@@ -4,7 +4,19 @@ from lingua import Language, LanguageDetectorBuilder
 
 class LanguageDetector:
     def __init__(self):
-        self._languages = [Language.ENGLISH, Language.ZULU, Language.AFRIKAANS, Language.SOTHO, Language.XHOSA]
+        self._languages = [
+            Language.AFRIKAANS,
+            Language.DUTCH,
+            Language.ENGLISH,
+            Language.FRENCH,
+            Language.GERMAN,
+            Language.ITALIAN,
+            Language.PORTUGUESE,
+            Language.SOTHO,
+            Language.SPANISH,
+            Language.XHOSA,
+            Language.ZULU,
+        ]
         self._detector = LanguageDetectorBuilder.from_languages(*self._languages).build()
 
     def detect(self, term):
