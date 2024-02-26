@@ -25,30 +25,32 @@ def country_colour_map_dynamic():
 
 def country_colour_map_static():
     return {
-        "south_africa": "#e5c494",
-        "belgium": "#ffd000",
-        "england": "#66c2a5",
-        "france": "#ffa886",
-        "germany": "#cd212a",
-        "ireland": "#b3f469",
-        "italy": "#e78ac3",
-        "netherlands": "#ff9325",
-        "northern_ireland": "#009a61",
-        "portugal": "#ffec4f",
-        "scotland": "#91a4ff",
-        "spain": "#800080",
-        "wales": "#ccebc5",
+        # Countries
+        "south_africa": "#f8d095",
+        "england": "#2fc495",
+        "ireland": "#afee48",
+        "northern_ireland": "#afee48",
+        "scotland": "#afee48",
+        "wales": "#afee48",
+        "france": "#9bb2e7",
+        "germany": "#ffd518",
+        "belgium": "#ff7d4a",
+        "netherlands": "#ff7d4a",
+        "italy": "#f286c8",
+        "portugal": "#f286c8",
+        "spain": "#f286c8",
+        # Languages
         "afrikaans": "#a65628",
-        "dutch": "#ff9325",
-        "english": "#66c2a5",
-        "french": "#ffa886",
-        "german": "#cd212a",
-        "italian": "#e78ac3",
-        "portuguese": "#ffec4f",
-        "sotho": "#a6761d",
-        "spanish": "#800080",
-        "xhosa": "#d95f02",
-        "zulu": "#f781bf",
+        "xhosa": "#3ca53c",
+        "zulu": "#3ca53c",
+        "sotho": "#84ff84",
+        "dutch": "#ff7d4a",
+        "english": "#2fc495",
+        "french": "#9bb2e7",
+        "german": "#ffd518",
+        "italian": "#f286c8",
+        "portuguese": "#f286c8",
+        "spanish": "#f286c8",
     }
 
 
@@ -61,11 +63,43 @@ def get_colour(origin):
     return COLOUR_MAP.get(origin, DEFAULT_COLOUR)
 
 
+LEGEND_LABEL_MAP = {
+    "south_africa": "South Africa",
+    "england": "England",
+    "ireland": "Ireland, Northern Ireland,\nScotland, Wales",
+    "northern_ireland": "Ireland, Northern Ireland,\nScotland, Wales",
+    "scotland": "Ireland, Northern Ireland,\nScotland, Wales",
+    "wales": "Ireland, Northern Ireland,\nScotland, Wales",
+    "france": "France",
+    "germany": "Germany",
+    "belgium": "Netherlands, Belgium",
+    "netherlands": "Netherlands, Belgium",
+    "italy": "Portugal, Spain, Italy",
+    "portugal": "Portugal, Spain, Italy",
+    "spain": "Portugal, Spain, Italy",
+    "afrikaans": "Afrikaans",
+    "dutch": "Dutch",
+    "english": "English",
+    "french": "French",
+    "german": "German",
+    "italian": "Portuguese, Spanish, Italian",
+    "portuguese": "Portuguese, Spanish, Italian",
+    "sotho": "Sesotho",
+    "spanish": "Portuguese, Spanish, Italian",
+    "xhosa": "Xhosa/Zulu (Nguni)",
+    "zulu": "Xhosa/Zulu (Nguni)",
+}
+
+
 def get_custom_legend(figure_origins: pd.DataFrame):
-    legend_elements = []
+    legend_dictionary = {}
     for origin in COLOUR_MAP:
         if origin in figure_origins:
-            legend_elements.append(
-                Patch(facecolor=COLOUR_MAP[origin], label=str(origin).replace('_', ' ').title()))
-    legend_elements.append(Patch(facecolor=DEFAULT_COLOUR, label="None"))
+            legend_dictionary[LEGEND_LABEL_MAP[origin]] = COLOUR_MAP[origin]
+
+    legend_elements = []
+    for label in legend_dictionary:
+        legend_elements.append(
+            Patch(facecolor=legend_dictionary[label], label=label))
+    legend_elements.append(Patch(facecolor=DEFAULT_COLOUR, label="None/Unknown"))
     return legend_elements
