@@ -1,5 +1,5 @@
+import argparse
 import os.path
-import sys
 from datetime import datetime
 from time import time
 from typing import Any
@@ -96,27 +96,29 @@ def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 
 
 
 def main() -> tuple[Any, Any, Any] | None:
-    if len(sys.argv) < 2:
-        logger.error("Please provide an address to map")
-        return None
+    parser = argparse.ArgumentParser()
 
-    address = sys.argv[1]
+    address_key = "address"
+    distance_key = "distance"
+    line_width_key = "line_width"
+    language_key = "language"
 
-    distance = 1000
-    if len(sys.argv) > 2:
-        try:
-            distance = int(sys.argv[2])
-        except ValueError:
-            logger.error(f"Distance not an integer. Carrying on with distance = {distance}")
+    parser.add_argument(f"{address_key}", help="The address around which to plot")
+    parser.add_argument(f"--{distance_key}", help="The distance around address to plot", nargs='?', default=1000, type=int)
+    parser.add_argument(f"--{line_width_key}", help="The line width to plot", nargs='?', default=1, type=int)
+    parser.add_argument(f"--{language_key}", help="Use language mapping instead of dictionary", nargs='?',
+                        default=False,
+                        type=bool)
 
-    edge_line_width = 2
-    if len(sys.argv) > 3:
-        try:
-            edge_line_width = int(sys.argv[3])
-        except ValueError:
-            logger.error(f"Edge line width is not an integer. Carrying on with distance = {edge_line_width}")
+    args = vars(parser.parse_args())
+    address = args[address_key]
+    edge_line_width = args[line_width_key]
+    distance = args[distance_key]
+    map_language = args[language_key]
 
-    return map_origin_of_address(address, distance, edge_line_width)
+    print(args)
+
+    return map_origin_of_address(address, distance, edge_line_width, map_language)
 
 
 if __name__ == "__main__":
