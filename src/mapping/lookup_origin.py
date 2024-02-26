@@ -77,5 +77,6 @@ def map_street_to_origin(x, map_language: bool = False):
     else:
         x["origin"] = None
         x["primary_term"] = None
+        x["name"] = None
 
     return x

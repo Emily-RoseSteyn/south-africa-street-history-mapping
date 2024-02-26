@@ -58,7 +58,7 @@ def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 
     gdf = get_gdf(address, graph, processed_place_name, dist, map_language)
 
     # Get colours
-    gdf = gdf.apply(lambda x: get_colour(x["origin"]), axis=1)
+    gdf["colour"] = gdf["origin"].apply(lambda x: get_colour(x))
 
     logger.info(f"Plotting...")
     # Map coloured streets on graph
