@@ -15,7 +15,7 @@ from utils.logger import get_logger
 logger = get_logger()
 
 
-def get_gdf(address, graph, processed_place_name, dist, map_language):
+def get_gdf(address, graph, processed_place_name, dist, map_language, use_cache: bool = True):
     logger.info(f"Getting geodataframe for {address}")
     gdf_output_dir = OUTPUT_GDF_DIR
     if not os.path.exists(gdf_output_dir):
@@ -25,7 +25,7 @@ def get_gdf(address, graph, processed_place_name, dist, map_language):
         else f"{processed_place_name}_{dist}.parquet"
     gdf_output_path = os.path.join(gdf_output_dir, filename)
 
-    if os.path.isfile(gdf_output_path):
+    if os.path.isfile(gdf_output_path) and use_cache:
         logger.info(f"Found existing parquet for {address}")
         return gpd.read_parquet(gdf_output_path)
 
@@ -43,8 +43,8 @@ def get_gdf(address, graph, processed_place_name, dist, map_language):
     return gdf
 
 
-def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 1, map_language=False
-                          ) -> tuple[Any, Any, Any]:
+def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 1, map_language: bool = False,
+                          use_cache: bool = True) -> tuple[Any, Any, Any]:
     processed_place_name = address.split(',')[0].strip(PUNCTUATION).replace(' ', '_').lower()
     logger.info(f"Mapping origins of address {address} within {dist} meters")
     start_time = time()
@@ -55,7 +55,7 @@ def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 
     logger.info(f"Retrieved graph for address {address}")
 
     # Getting dictionary geodataframe
-    gdf = get_gdf(address, graph, processed_place_name, dist, map_language)
+    gdf = get_gdf(address, graph, processed_place_name, dist, map_language, use_cache)
 
     # Get colours
     gdf["colour"] = gdf["origin"].apply(lambda x: get_colour(x))
@@ -85,7 +85,7 @@ def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 
         else f"{timestamp}_{processed_place_name}.png"
     output_path = os.path.join(output_dir, filename)
     map_fig.savefig(output_path, dpi=300, bbox_inches='tight', format="png",
-                    facecolor=DEFAULT_BACKGROUND_COLOUR, transparent=False)
+                    facecolor=DEFAULT_BACKGROUND_COLOUR, transparent=True)
 
     process_time = round(int(time() - start_time) / 60, 2)
 
@@ -102,12 +102,17 @@ def main() -> tuple[Any, Any, Any] | None:
     distance_key = "distance"
     line_width_key = "line_width"
     language_key = "language"
+    use_cache_key = "use_cache"
 
     parser.add_argument(f"{address_key}", help="The address around which to plot")
-    parser.add_argument(f"--{distance_key}", help="The distance around address to plot", nargs='?', default=1000, type=int)
+    parser.add_argument(f"--{distance_key}", help="The distance around address to plot", nargs='?', default=1000,
+                        type=int)
     parser.add_argument(f"--{line_width_key}", help="The line width to plot", nargs='?', default=1, type=int)
     parser.add_argument(f"--{language_key}", help="Use language mapping instead of dictionary", nargs='?',
                         default=False,
+                        type=bool)
+    parser.add_argument(f"--{use_cache_key}", help="Use cache when mapping - defaults to True", nargs='?',
+                        default=True,
                         type=bool)
 
     args = vars(parser.parse_args())
@@ -115,10 +120,11 @@ def main() -> tuple[Any, Any, Any] | None:
     edge_line_width = args[line_width_key]
     distance = args[distance_key]
     map_language = args[language_key]
+    use_cache = args[use_cache_key]
 
     print(args)
 
-    return map_origin_of_address(address, distance, edge_line_width, map_language)
+    return map_origin_of_address(address, distance, edge_line_width, map_language, use_cache)
 
 
 if __name__ == "__main__":

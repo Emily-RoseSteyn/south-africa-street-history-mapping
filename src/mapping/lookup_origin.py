@@ -47,8 +47,7 @@ def lookup_origin(street_name: str, map_language: bool = False, country: str = "
     return origin, primary_term
 
 
-def lookup_language(street_name: str, map_language: bool = False, country: str = "south_africa"
-                  ) -> tuple[None, None] | tuple[Any, Any]:
+def lookup_language(street_name: str) -> tuple[None, None] | tuple[Any, Any]:
     street_name = street_name.lower()
     terms = street_name.split(' ')
     primary_terms = [i for i in terms if i not in STOP_TERMS]
