@@ -84,10 +84,10 @@ LEGEND_LABEL_MAP = {
     "german": "German",
     "italian": "Portuguese, Spanish, Italian",
     "portuguese": "Portuguese, Spanish, Italian",
-    "sotho": "Indigenous",
+    "sotho": "Bantu: isiXhosa, isiZulu, Sesotho",
     "spanish": "Portuguese, Spanish, Italian",
-    "xhosa": "Indigenous",
-    "zulu": "Indigenous",
+    "xhosa": "Bantu: isiXhosa, isiZulu, Sesotho",
+    "zulu": "Bantu: isiXhosa, isiZulu, Sesotho",
 }
 
 
