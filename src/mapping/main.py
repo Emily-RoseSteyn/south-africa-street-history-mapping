@@ -68,9 +68,9 @@ def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 
                                     edge_linewidth=edge_linewidth, edge_alpha=1, show=False)
 
     # Get custom legend
-    kensington_origins_in_fig = gdf["origin"].unique()
-    kensington_legend_elements = get_custom_legend(kensington_origins_in_fig)
-    map_ax.legend(handles=kensington_legend_elements, bbox_to_anchor=(1.4, 1), fontsize=8,
+    origins_in_fig = gdf["origin"].unique()
+    legend_elements = get_custom_legend(origins_in_fig)
+    map_ax.legend(handles=legend_elements, bbox_to_anchor=(1.4, 1), fontsize=8,
                   facecolor=DEFAULT_BACKGROUND_COLOUR, framealpha=1)
 
     # Create directory if it doesn't exist
