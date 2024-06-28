@@ -85,7 +85,7 @@ def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 
         else f"{timestamp}_{processed_place_name}.png"
     output_path = os.path.join(output_dir, filename)
     map_fig.savefig(output_path, dpi=300, bbox_inches='tight', format="png",
-                    facecolor=DEFAULT_BACKGROUND_COLOUR, transparent=True)
+                    facecolor=DEFAULT_BACKGROUND_COLOUR, transparent=False)
 
     process_time = round(int(time() - start_time) / 60, 2)
 
