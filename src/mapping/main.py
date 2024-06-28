@@ -43,7 +43,7 @@ def get_gdf(address, graph, processed_place_name, dist, map_language):
     return gdf
 
 
-def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 2, map_language=False
+def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 1, map_language=False
                           ) -> tuple[Any, Any, Any]:
     processed_place_name = address.split(',')[0].strip(PUNCTUATION).replace(' ', '_').lower()
     logger.info(f"Mapping origins of address {address} within {dist} meters")
