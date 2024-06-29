@@ -120,7 +120,7 @@ def main() -> tuple[Any, Any, Any] | None:
     parser.add_argument(f"--{use_cache_key}", help="Use cache when mapping - defaults to True", nargs='?',
                         default=True,
                         type=bool)
-    parser.add_argument(f"--{use_cache_key}", help="Figure size for output figure - defaults to 32, assumes a square", nargs='?',
+    parser.add_argument(f"--{fig_size_key}", help="Figure size for output figure - defaults to 32, assumes a square", nargs='?',
                         default=32,
                         type=int)
 
