@@ -5,6 +5,7 @@ from time import time
 from typing import Any
 
 import geopandas as gpd
+import matplotlib.font_manager as font_manager
 import osmnx as ox
 
 from mapping.country_colour_map import DEFAULT_BACKGROUND_COLOUR, get_custom_legend, get_colour
@@ -43,8 +44,9 @@ def get_gdf(address, graph, processed_place_name, dist, map_language, use_cache:
     return gdf
 
 
-def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 1, map_language: bool = False,
-                          use_cache: bool = True) -> tuple[Any, Any, Any]:
+def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 2, map_language: bool = False,
+                          use_cache: bool = True, fig_size: tuple = (32, 32), custom_font: str = "sans-serif"
+                          ) -> tuple[Any, Any, Any]:
     processed_place_name = address.split(',')[0].strip(PUNCTUATION).replace(' ', '_').lower()
     logger.info(f"Mapping origins of address {address} within {dist} meters")
     start_time = time()
@@ -62,7 +64,7 @@ def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 
 
     logger.info(f"Plotting...")
     # Map coloured streets on graph
-    map_fig, map_ax = ox.plot_graph(graph, node_size=0,
+    map_fig, map_ax = ox.plot_graph(graph, node_size=0, figsize=fig_size,
                                     dpi=300, bgcolor=DEFAULT_BACKGROUND_COLOUR,
                                     save=False, edge_color=gdf["colour"],
                                     edge_linewidth=edge_linewidth, edge_alpha=1, show=False)
@@ -70,8 +72,11 @@ def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 
     # Get custom legend
     origins_in_fig = gdf["origin"].unique()
     legend_elements = get_custom_legend(origins_in_fig)
-    map_ax.legend(handles=legend_elements, bbox_to_anchor=(1.4, 1), fontsize=8,
-                  facecolor=DEFAULT_BACKGROUND_COLOUR, framealpha=1)
+
+    # Allow custom font to match output if necessary
+    font = font_manager.FontProperties(family=custom_font, size=32)
+    map_ax.legend(handles=legend_elements, bbox_to_anchor=(1.4, 1),
+                  facecolor=DEFAULT_BACKGROUND_COLOUR, framealpha=1, prop=font)
 
     # Create directory if it doesn't exist
     output_dir = OUTPUT_IMAGES_DIR
@@ -103,17 +108,21 @@ def main() -> tuple[Any, Any, Any] | None:
     line_width_key = "line_width"
     language_key = "language"
     use_cache_key = "use_cache"
+    fig_size_key = "fig_size"
 
     parser.add_argument(f"{address_key}", help="The address around which to plot")
     parser.add_argument(f"--{distance_key}", help="The distance around address to plot", nargs='?', default=1000,
                         type=int)
-    parser.add_argument(f"--{line_width_key}", help="The line width to plot", nargs='?', default=1, type=int)
+    parser.add_argument(f"--{line_width_key}", help="The line width to plot", nargs='?', default=2, type=int)
     parser.add_argument(f"--{language_key}", help="Use language mapping instead of dictionary", nargs='?',
                         default=False,
                         type=bool)
     parser.add_argument(f"--{use_cache_key}", help="Use cache when mapping - defaults to True", nargs='?',
                         default=True,
                         type=bool)
+    parser.add_argument(f"--{use_cache_key}", help="Figure size for output figure - defaults to 32, assumes a square", nargs='?',
+                        default=32,
+                        type=int)
 
     args = vars(parser.parse_args())
     address = args[address_key]
@@ -121,10 +130,11 @@ def main() -> tuple[Any, Any, Any] | None:
     distance = args[distance_key]
     map_language = args[language_key]
     use_cache = args[use_cache_key]
+    fig_size = args[fig_size_key]
 
     print(args)
 
-    return map_origin_of_address(address, distance, edge_line_width, map_language, use_cache)
+    return map_origin_of_address(address, distance, edge_line_width, map_language, use_cache, (fig_size, fig_size))
 
 
 if __name__ == "__main__":
