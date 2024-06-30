@@ -7,6 +7,7 @@ from typing import Any
 import geopandas as gpd
 import matplotlib.font_manager as font_manager
 import osmnx as ox
+from geopandas import GeoDataFrame
 
 from mapping.country_colour_map import DEFAULT_BACKGROUND_COLOUR, get_custom_legend, get_colour
 from mapping.lookup_origin import map_street_to_origin
@@ -46,7 +47,7 @@ def get_gdf(address, graph, processed_place_name, dist, map_language, use_cache:
 
 def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 2, map_language: bool = False,
                           use_cache: bool = True, fig_size: tuple = (32, 32), custom_font: str = "sans-serif"
-                          ) -> tuple[Any, Any, Any]:
+                          ) -> tuple[Any, GeoDataFrame, Any]:
     processed_place_name = address.split(',')[0].strip(PUNCTUATION).replace(' ', '_').lower()
     logger.info(f"Mapping origins of address {address} within {dist} meters")
     start_time = time()
