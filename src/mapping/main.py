@@ -36,7 +36,7 @@ def get_gdf(address, graph, processed_place_name, dist, map_language, use_cache:
     gdf = gdf.apply(lambda x: map_street_to_origin(x, map_language), axis=1)
 
     # Save
-    gdf = gpd.GeoDataFrame(gdf[["origin", "name", "geometry"]], index=gdf.index)
+    gdf = gpd.GeoDataFrame(gdf[["origin", "name", "primary_term", "likelihood", "geometry"]], index=gdf.index)
     gdf.to_parquet(gdf_output_path)
 
     logger.info(f"Mapped origins and colours for {address}.")

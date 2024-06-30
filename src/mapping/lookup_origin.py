@@ -11,7 +11,7 @@ conn = sqlite3.connect(SQLITE_DB)
 
 
 def lookup_origin(street_name: str, map_language: bool = False, country: str = "south_africa"
-                  ) -> tuple[None, None] | tuple[Any, Any]:
+                  ) -> tuple[None, None, None] | tuple[Any, Any, Any]:
     street_name = street_name.lower()
     terms = street_name.split(' ')
     primary_terms = [i for i in terms if i not in STOP_TERMS]
@@ -27,10 +27,11 @@ def lookup_origin(street_name: str, map_language: bool = False, country: str = "
         params=primary_terms)
 
     if result.empty:
-        return None, None
+        return None, None, None
 
     primary_term = result["term"][0]
     origin = result["country"][0]
+    likelihood = result["likelihood"][0]
 
     if map_language and origin == country:
         # Do an additional language lookup
@@ -43,11 +44,12 @@ def lookup_origin(street_name: str, map_language: bool = False, country: str = "
             conn,
             params=[primary_term])
         origin = language_result["language"][0]
+        likelihood = language_result["language"][0]
 
-    return origin, primary_term
+    return origin, primary_term, likelihood
 
 
-def lookup_language(street_name: str) -> tuple[None, None] | tuple[Any, Any]:
+def lookup_language(street_name: str) -> tuple[None, None, None] | tuple[Any, Any, Any]:
     street_name = street_name.lower()
     terms = street_name.split(' ')
     primary_terms = [i for i in terms if i not in STOP_TERMS]
@@ -59,23 +61,27 @@ def lookup_language(street_name: str) -> tuple[None, None] | tuple[Any, Any]:
     language_detector = LanguageDetector()
     language_result = language_detector.detect(primary_term)
     origin = language_result["language"][0]
+    likelihood = language_result["likelihood"][0]
 
-    return origin, primary_term
+    return origin, primary_term, likelihood
 
 
 def map_street_to_origin(x, map_language: bool = False):
     street_name = x["name"]
     if map_language and isinstance(street_name, str):
-        origin, primary_term = lookup_language(street_name)
+        origin, primary_term, likelihood = lookup_language(street_name)
         x["origin"] = origin
         x["primary_term"] = primary_term
+        x["likelihood"] = likelihood
     elif isinstance(street_name, str):
-        origin, primary_term = lookup_origin(street_name, map_language)
+        origin, primary_term, likelihood = lookup_origin(street_name, map_language)
         x["origin"] = origin
         x["primary_term"] = primary_term
+        x["likelihood"] = likelihood
     else:
         x["origin"] = None
         x["primary_term"] = None
         x["name"] = None
+        x["likelihood"] = None
 
     return x
