@@ -26,7 +26,7 @@ def process(address, distance, edge_line_width, use_cache, fig_size):
     return calculate_length_by_origin(grouped_by_origin)
 
 
-def main() -> tuple[Any, Any, Any] | None:
+def map_e2e() -> tuple[Any, Any, Any] | None:
     print("-------------------------------------PROCESSING ADDRESS-------------------------------------")
     parser = argparse.ArgumentParser()
 
@@ -59,3 +59,7 @@ def main() -> tuple[Any, Any, Any] | None:
     print(args)
 
     return process(address, distance, edge_line_width, use_cache, (fig_size, fig_size))
+
+
+if __name__ == "__main__":
+    map_e2e()
