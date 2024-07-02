@@ -27,6 +27,7 @@ def process(address, distance, edge_line_width, use_cache, fig_size):
 
 
 def main() -> tuple[Any, Any, Any] | None:
+    print("-------------------------------------PROCESSING ADDRESS-------------------------------------")
     parser = argparse.ArgumentParser()
 
     address_key = "address"
