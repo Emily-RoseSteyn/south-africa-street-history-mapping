@@ -23,7 +23,7 @@ def process(address, distance, edge_line_width, use_cache, fig_size):
     print("-------------------------------------CALCULATE LENGTHS-------------------------------------")
     grouped_by_origin = calculate_length_by_origin(gdf)
     print(grouped_by_origin)
-    return calculate_length_by_origin(grouped_by_origin)
+    return grouped_by_origin
 
 
 def map_e2e() -> tuple[Any, Any, Any] | None:
