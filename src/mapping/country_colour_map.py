@@ -26,14 +26,14 @@ def country_colour_map_dynamic():
 def country_colour_map_static():
     return {
         # Countries
-        "south_africa": "#f8d095",
+        "south_africa": "#ffd518",
         "england": "#2fc495",
         "ireland": "#afee48",
         "northern_ireland": "#afee48",
         "scotland": "#afee48",
         "wales": "#afee48",
         "france": "#9bb2e7",
-        "germany": "#ffd518",
+        "germany": "#f8d095",
         "belgium": "#ff7d4a",
         "netherlands": "#f7662d",
         "italy": "#f286c8",
