@@ -1,15 +1,42 @@
 # South Africa Street History Mapping
 
-A small repo to generate a map of South Africa's streets colour coded by the name's origin.
+We were curious about visualising how street names correlate to their language or place of origin in South Africa - a country whose history is marked by significant power struggles and complex race relations. This repo provides the code for creating maps of street networks colour coded by place of origin and language.
 
-## Prerequisites
+This readme is divided into:
+* [Results](#results)
+* [Academic Outputs](#academic-outputs)
+* [Running the code](#running-the-code)
+* [Helpful Notebooks](#running-the-code)
+* [References](#references)
+
+## Results
+
+[//]: # (TODO: Fill in this section)
+### Johannesburg
+
+#### Soweto
+
+#### Sandton
+
+### Cape Town
+
+
+## Academic Outputs
+* [Poster for IC2S2 2024](https://drive.google.com/file/d/1oTQ1dDyFoRqsKCXKTvk2OtT13-hKzsPT/view?usp=drive_link)
+* Paper coming soon!
+
+## Running the code
+This section describes how to run the code. Feel free to open an issue if you have any questions!
+
+### Prerequisites
 
 * If windows, git bash
 * [Docker](https://docs.docker.com/desktop/)
 * [Poetry](https://python-poetry.org/docs/)
 * ~5GB Disk Space (Docker images + data)
 
-## Setup
+### Setup
+Poetry is used to manage packages and virtual environments.
 
 ```shell
  poetry shell
@@ -19,137 +46,77 @@ A small repo to generate a map of South Africa's streets colour coded by the nam
  poetry install
 ```
 
-The following pipelines are used to generate results.
+### Data Download Pipeline
 
-## Data Download Pipeine
+#### 1. Retrieve streets for relevant countries
+_Core Code:_ [download_country_streets.py](./src/street_list_download/download_country_streets.py)
 
-#### 1. List Open Street Maps Locations
+We first need to download all street names for South Africa and selected countries that have played a role in South Africa's history (see [countries](src/utils/country_iso_map.py)). Data is downloaded using the [Overpass API](https://overpass-api.de) - an API that retrieves data easily from [OpenStreetMaps](https://www.openstreetmap.org/).
 
-To get a list of all available locations downloadable via geofabrik, run:
-
+To retrieve street data, check that you're happy with what countries are being retrieved and run:
 ```shell
-./scripts/geofabrik-list-locations.sh
+python ./src/street_list_download/main.py
 ```
 
-From the output, you can identify which regions you want to download for the following step.
-
-### 2. Download open street map data for region
-
-Use the [`download locations script`](./scripts/geofabrik-download-locations.sh) to download the Open Street Map data
-for your selected location.
-
-Here is the script for south africa:
-
+If you're on a slurm enabled cluster, you can run
 ```shell
-./scripts/geofabrik-download-locations.sh africa/south-africa
+sbatch ./scripts/1_retrieve-streets.sbatch
 ```
 
-#### Countries
+The outputs of this script are saved to [streets](output/streets) in CSV format.
 
-**Repeat this step for the following countries:**
+#### 2. Process street data
+_Core Code:_ [preprocess_country_streets.py](./src/street_list_preprocessing/preprocess_country_streets.py)
 
-| Code                                  | OSM Size [GB] |
-|---------------------------------------|---------------|
-| `africa/south-africa`                 | 0.3           |
-| `europe/belgium`                      | 0.6           |
-| `europe/france`                       | 4.2           |
-| `europe/germany`                      | 4.0           |
-| `europe/ireland-and-northern-ireland` | 0.3           |
-| `europe/italy`                        | 1.8           |
-| `europe/netherlands`                  | 1.2           |
-| `europe/portugal`                     | 0.3           |
-| `europe/spain`                        | 1.1           |
-| `europe/great-britain/england`        | 1.3           |
-| `europe/great-britain/scotland`       | 0.3           |
-| `europe/great-britain/wales`          | 0.1           |
-|                                       |               |
-| **Total**                             | ~16GB         |
+We now process the street names for the various countries so that we end up with a dictionary of terms for the country. Each street name is:
+* Exploded by space (e.g. so that Nottingham Road becomes [Nottingham, Road])
+* Converted to lowercase
 
-#### Manual Download
+This results in a dataframe of terms. Empty, NaN, digit, and duplicate terms are dropped. Words less than a certain length are also dropped. 
 
-If any partigular locations do not download or you need to avoid docker, you can manually download the data
-from [Geofabrik](https://download.geofabrik.de/) - e.g. for Germany:
-
-```bash
-# Linux
-wget https://download.geofabrik.de/europe/germany-latest.osm.pbf -O ./data/europe/germany
-
-# Windows
-curl https://download.geofabrik.de/europe/germany-latest.osm.pbf -o ./data/europe/germany
-```
-
-### 4. [*Optional!*] Convert osm data to sqlite
-
-SQLite is somewhat easier to work with and query but not entirely necessary. If you plan to do additional work on the
-data beyond what is provided in the source code of this repo, you may want to complete this step.
-
-For reference, this is the expected extracted sizes for the countries above:
-
-| Code                                  | OSM Size [GB] | SQLite Size [GB] |
-|---------------------------------------|---------------|------------------|
-| `africa/south-africa`                 | 0.3           | 2.1              |
-| `europe/belgium`                      | 0.6           | 3.6              |
-| `europe/france`                       | 4.2           | 24.6             |
-| `europe/germany`                      | 4.0           | 25.2             |
-| `europe/ireland-and-northern-ireland` | 0.3           | 2.5              |
-| `europe/italy`                        | 1.8           | 11.2             |
-| `europe/netherlands`                  | 1.2           | 8.3              |
-| `europe/portugal`                     | 0.3           | 2.0              |
-| `europe/spain`                        | 1.1           | 7.1              |
-| `europe/great-britain/england`        | 1.3           | 8.0              |
-| `europe/great-britain/scotland`       | 0.3           | 1.5              |
-| `europe/great-britain/wales`          | 0.1           | 0.7              |
-|                                       |               |                  |
-| **Total**                             | ~16GB         | ~98GB            |
-
-Use the [`gdal convert script`](./scripts/gdal-convert-osm-to-sql.sh) to convert the OSM data to sqlite (an easier
-format to work with in python).
-
+To process the street data, run:
 ```shell
-./scripts/gdal-convert-osm-to-sql.sh africa/south-africa
+python ./src/street_list_preprocessing/main.py
 ```
 
-Repeat for all downloaded countries.
-
-You should now have a `.sqlite` file in the [data directory](data) for your selected locations.
-
-#### Manual Conversion
-
-Under the hood, this script uses a docker container with `gdal` installed (
-see [docs](https://github.com/OSGeo/gdal/tree/master/docker)). Version 3.6.4 of `gdal` is used because, at the time of
-writing, it successfully converts osm to sqlite without RAM issues.
-
-If you want to avoid docker, you can ensure you have [`gdal` installed](https://gdal.org/download.html) on your system
-and run the command passed into the
-docker container:
-
+If you're on a slurm enabled cluster, you can run
 ```shell
-# Replace LOCATION with the region directory you want to work in
-# e.g. africa/south-africa
-cd data/${LOCATION}
-
-# Replace filename below with relevant filename in LOCATION
-# e.g. south-africa-latest
-ogr2ogr -overwrite -f SQLite -lco FORMAT=WKT "${filename}.sqlite" "${filename}.osm.pbf"
+sbatch ./scripts/2_process-streets.sbatch
 ```
 
-### 5. [*Optional!*] Move data to remote server
+The outputs of this script are saved to [streets](output/streets) in CSV format with the prefix "processed". Additionally, all terms and the corresponding origin country are saved to a sqlite database in [output/street_history.sqlite](output/street_history.sqlite) in the table `street_terms`.
 
-You'll need `rsync` for this step.
-You can run the following from the root project directory to sync the data across to
-a remote server if need be:
+#### 3. Build Dictionary
 
+_Core Code:_ [build_dictionary_for_term.py](./src/dictionary_builder/build_dictionary_for_term.py)
+
+Now that we have all the terms for each selected country, we can build a lookup dictionary for each term for a "home" country. In our case, South Africa is the home country.
+
+For each term in South Africa's terms data from the previous step, the term is looked up in the `street_terms` table. If the term is matched to one or more countries (including in the home country), the term is saved in a dictionary table and assigned a likelihood based on the frequency of the term appearing in different countries.
+
+The term, origin, and likelihood are saved to a sqlite database in [output/street_history.sqlite](output/street_history.sqlite) in a table with the format `<country>_terms_dictionary`. 
+
+To build a dictionary of terms for a specific country, run:
 ```shell
-rsync -avm --include='*/' --include='*.osm.pbf' --exclude='*' ./data ${REMOTE}:${REMOTE_DIRECTORY}
+python ./src/dictionary_builder/main.py $COUNTRY
 ```
 
-## Dictionary Generation
+Where $COUNTRY is `south_africa` in the case of this repo but could be modified to other countries that have been downloaded.
 
-[//]: # (TODO: Document this some more)
+If you're on a slurm enabled cluster, you can run:
+```shell
+sbatch ./scripts/3_build-dictionary-south-africa.sbatch
+```
 
-#### 1. List Open Street Maps Locations
+#### 4. Map
+[//]: # (TODO: Fill in this section)
 
-## Relevant Notebooks
+
+## Helpful Notebooks
+[//]: # (TODO: Fill in this section)
 
 - [Sandbox with geofabrik](notebooks/geofabrik-sandbox.ipynb) (requires pipeline to be run below)
 - [Sandbox with osmnx](notebooks/osmnx-sandbox.ipynb)
+
+## References
+[//]: # (TODO: Fill in this section)
