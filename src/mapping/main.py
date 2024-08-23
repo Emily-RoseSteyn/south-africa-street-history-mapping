@@ -7,6 +7,7 @@ from typing import Any
 import geopandas as gpd
 import matplotlib.font_manager as font_manager
 import osmnx as ox
+import shapely
 from geopandas import GeoDataFrame
 
 from mapping.country_colour_map import DEFAULT_BACKGROUND_COLOUR, get_custom_legend, get_colour
@@ -77,7 +78,7 @@ def plot_osmnx_graph(custom_font, edge_linewidth, fig_size, gdf, graph, map_lang
     return graph, gdf, map_fig
 
 
-def map_origin_of_polygon(polygon, address: str, edge_linewidth: int = 2, map_language: bool = False,
+def map_origin_of_polygon(polygon: shapely.geometry.Polygon, address: str, edge_linewidth: int = 2, map_language: bool = False,
                           use_cache: bool = True, fig_size: tuple = (32, 32), custom_font: str = "sans-serif"
                           ) -> tuple[Any, GeoDataFrame, Any]:
     processed_place_name = address.split(',')[0].strip(PUNCTUATION).replace(' ', '_').lower()

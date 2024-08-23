@@ -2,6 +2,7 @@ import argparse
 from typing import Any
 
 import osmnx
+import shapely
 
 from mapping.calculate_length_by_origin import calculate_length_by_origin
 from mapping.main import map_origin_of_address, map_origin_of_polygon
@@ -33,7 +34,7 @@ def process_address(address, distance, edge_line_width, use_cache, fig_size):
     return grouped_by_origin
 
 
-def process_polygon(address, polygon, edge_line_width, use_cache, fig_size):
+def process_polygon(polygon: shapely.geometry.Polygon, address, edge_line_width, use_cache, fig_size):
     print("----------------------------------DICTIONARY----------------------------------")
     graph, gdf, map_fig = map_origin_of_polygon(polygon, address,
                                                 edge_linewidth=edge_line_width,
@@ -47,7 +48,6 @@ def process_polygon(address, polygon, edge_line_width, use_cache, fig_size):
                           use_cache=use_cache,
                           custom_font="Poppins",
                           fig_size=fig_size)
-
 
     print("-----------------------------CALCULATE LENGTHS-----------------------------")
     grouped_by_origin = calculate_length_by_origin(gdf)
