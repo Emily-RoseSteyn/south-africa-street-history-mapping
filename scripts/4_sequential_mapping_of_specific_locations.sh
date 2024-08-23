@@ -1,1 +1,1 @@
-python ./src/mapping/map-e2e.py "Midrand, South Africa" --distance 105000 --fig_size 128
+python ./src/mapping/map_e2e.py "Midrand, South Africa" --distance 105000 --fig_size 128
