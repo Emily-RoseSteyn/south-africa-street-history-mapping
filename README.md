@@ -149,7 +149,7 @@ the terms provided.
 To map all street names in a region, run the end-to-end mapping - e.g.:
 
 ```shell
-python ./src/mapping/map-e2e.py "Johannesburg, South Africa" --distance 30000 --fig_size 64
+python ./src/mapping/map_e2e.py "Johannesburg, South Africa" --distance 30000 --fig_size 64
 ```
 
 ## Helpful Notebooks
