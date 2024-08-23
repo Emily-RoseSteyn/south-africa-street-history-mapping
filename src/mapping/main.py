@@ -45,7 +45,9 @@ def get_gdf(address, graph, processed_place_name, label, map_language, use_cache
     logger.info(f"Saved parquet to {gdf_output_path}")
     return gdf
 
-def get_output_image_path(processed_place_name: str, map_language: bool, group_folder: str = '', save_timestamp: int = 1):
+
+def get_output_image_path(processed_place_name: str, map_language: bool, group_folder: str = '',
+                          save_timestamp: int = 1):
     # Create directory if it doesn't exist
     output_dir = f"{OUTPUT_IMAGES_DIR}/{group_folder}"
     if not os.path.exists(output_dir):
@@ -59,6 +61,7 @@ def get_output_image_path(processed_place_name: str, map_language: bool, group_f
 
     return os.path.join(output_dir, filename)
 
+
 def plot_osmnx_graph(custom_font, edge_linewidth, fig_size, gdf, graph, output_path):
     # Get colours
     gdf["colour"] = gdf["origin"].apply(lambda x: get_colour(x))
@@ -67,7 +70,7 @@ def plot_osmnx_graph(custom_font, edge_linewidth, fig_size, gdf, graph, output_p
     map_fig, map_ax = ox.plot_graph(graph, node_size=0, figsize=fig_size,
                                     dpi=300, bgcolor=DEFAULT_BACKGROUND_COLOUR,
                                     save=False, edge_color=gdf["colour"],
-                                    edge_linewidth=edge_linewidth, edge_alpha=1, show=False)
+                                    edge_linewidth=edge_linewidth, edge_alpha=1, show=False, close=True)
     # Get custom legend
     origins_in_fig = gdf["origin"].unique()
     legend_elements = get_custom_legend(origins_in_fig)
@@ -82,7 +85,8 @@ def plot_osmnx_graph(custom_font, edge_linewidth, fig_size, gdf, graph, output_p
     return graph, gdf, map_fig
 
 
-def map_origin_of_polygon(polygon: shapely.geometry.Polygon, address: str, edge_linewidth: int = 2, map_language: bool = False,
+def map_origin_of_polygon(polygon: shapely.geometry.Polygon, address: str, edge_linewidth: int = 2,
+                          map_language: bool = False,
                           use_cache: bool = True, fig_size: tuple = (32, 32), custom_font: str = "sans-serif",
                           group_folder: str = '', save_timestamp: int = 1
                           ) -> tuple[Any, GeoDataFrame, Any]:
@@ -137,6 +141,7 @@ def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 
 
     return graph, gdf, map_fig
 
+
 def main() -> tuple[Any, Any, Any] | None:
     parser = argparse.ArgumentParser()
 
@@ -157,7 +162,8 @@ def main() -> tuple[Any, Any, Any] | None:
     parser.add_argument(f"--{use_cache_key}", help="Use cache when mapping - defaults to True", nargs='?',
                         default=True,
                         type=bool)
-    parser.add_argument(f"--{fig_size_key}", help="Figure size for output figure - defaults to 32, assumes a square", nargs='?',
+    parser.add_argument(f"--{fig_size_key}", help="Figure size for output figure - defaults to 32, assumes a square",
+                        nargs='?',
                         default=32,
                         type=int)
 
