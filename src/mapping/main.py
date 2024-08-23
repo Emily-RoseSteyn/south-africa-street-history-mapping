@@ -45,7 +45,21 @@ def get_gdf(address, graph, processed_place_name, label, map_language, use_cache
     logger.info(f"Saved parquet to {gdf_output_path}")
     return gdf
 
-def plot_osmnx_graph(custom_font, edge_linewidth, fig_size, gdf, graph, map_language, processed_place_name, start_time):
+def get_output_image_path(processed_place_name: str, map_language: bool, group_folder: str = '', save_timestamp: int = 1):
+    # Create directory if it doesn't exist
+    output_dir = f"{OUTPUT_IMAGES_DIR}/{group_folder}"
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    filename = f"{processed_place_name}_language.png" if map_language else f"{processed_place_name}.png"
+
+    if save_timestamp:
+        timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M')
+        filename = f"{timestamp}_{filename}"
+
+    return os.path.join(output_dir, filename)
+
+def plot_osmnx_graph(custom_font, edge_linewidth, fig_size, gdf, graph, output_path):
     # Get colours
     gdf["colour"] = gdf["origin"].apply(lambda x: get_colour(x))
     logger.info(f"Plotting...")
@@ -61,25 +75,16 @@ def plot_osmnx_graph(custom_font, edge_linewidth, fig_size, gdf, graph, map_lang
     font = font_manager.FontProperties(family=custom_font, size=32)
     map_ax.legend(handles=legend_elements, bbox_to_anchor=(1.4, 1),
                   facecolor=DEFAULT_BACKGROUND_COLOUR, framealpha=1, prop=font)
-    # Create directory if it doesn't exist
-    output_dir = OUTPUT_IMAGES_DIR
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
+
     # Save figure
-    timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M')
-    filename = f"{timestamp}_{processed_place_name}_language.png" if map_language \
-        else f"{timestamp}_{processed_place_name}.png"
-    output_path = os.path.join(output_dir, filename)
     map_fig.savefig(output_path, dpi=300, bbox_inches='tight', format="png",
                     facecolor=DEFAULT_BACKGROUND_COLOUR, transparent=False)
-    process_time = round(int(time() - start_time) / 60, 2)
-    logger.info(
-        f"Finished mapping! Time spent in minutes: {process_time}")
     return graph, gdf, map_fig
 
 
 def map_origin_of_polygon(polygon: shapely.geometry.Polygon, address: str, edge_linewidth: int = 2, map_language: bool = False,
-                          use_cache: bool = True, fig_size: tuple = (32, 32), custom_font: str = "sans-serif"
+                          use_cache: bool = True, fig_size: tuple = (32, 32), custom_font: str = "sans-serif",
+                          group_folder: str = '', save_timestamp: int = 1
                           ) -> tuple[Any, GeoDataFrame, Any]:
     processed_place_name = address.split(',')[0].strip(PUNCTUATION).replace(' ', '_').lower()
     logger.info(f"Mapping origins of {address} by polygon")
@@ -94,14 +99,20 @@ def map_origin_of_polygon(polygon: shapely.geometry.Polygon, address: str, edge_
     # TODO: Prevent overwriting of existing polygon files?
     gdf = get_gdf(address, graph, processed_place_name, 'polygon', map_language, use_cache)
 
-    return plot_osmnx_graph(custom_font, edge_linewidth, fig_size, gdf, graph, map_language, processed_place_name,
-                            start_time)
+    # Get filepath
+    output_path = get_output_image_path(processed_place_name, map_language, group_folder, save_timestamp)
+    # Plot graph
+    graph, gdf, map_fig = plot_osmnx_graph(custom_font, edge_linewidth, fig_size, gdf, graph, output_path)
+    process_time = round(int(time() - start_time) / 60, 2)
+    logger.info(
+        f"Finished mapping! Time spent in minutes: {process_time}")
 
-
+    return graph, gdf, map_fig
 
 
 def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 2, map_language: bool = False,
-                          use_cache: bool = True, fig_size: tuple = (32, 32), custom_font: str = "sans-serif"
+                          use_cache: bool = True, fig_size: tuple = (32, 32), custom_font: str = "sans-serif",
+                          group_folder: str = '', save_timestamp: int = 1
                           ) -> tuple[Any, GeoDataFrame, Any]:
     processed_place_name = address.split(',')[0].strip(PUNCTUATION).replace(' ', '_').lower()
     logger.info(f"Mapping origins of address {address} within {dist} meters")
@@ -114,9 +125,17 @@ def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 
 
     # Getting dictionary geodataframe
     gdf = get_gdf(address, graph, processed_place_name, dist, map_language, use_cache)
-    return plot_osmnx_graph(custom_font, edge_linewidth, fig_size, gdf, graph, map_language, processed_place_name,
-                            start_time)
 
+    # Get filepath
+    output_path = get_output_image_path(processed_place_name, map_language, group_folder, save_timestamp)
+    # Plot graph
+    graph, gdf, map_fig = plot_osmnx_graph(custom_font, edge_linewidth, fig_size, gdf, graph, output_path)
+
+    process_time = round(int(time() - start_time) / 60, 2)
+    logger.info(
+        f"Finished mapping! Time spent in minutes: {process_time}")
+
+    return graph, gdf, map_fig
 
 def main() -> tuple[Any, Any, Any] | None:
     parser = argparse.ArgumentParser()

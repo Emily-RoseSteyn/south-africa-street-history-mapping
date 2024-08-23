@@ -8,7 +8,8 @@ from mapping.calculate_length_by_origin import calculate_length_by_origin
 from mapping.main import map_origin_of_address, map_origin_of_polygon
 
 
-def process_address(address, distance, edge_line_width, use_cache, fig_size):
+def process_address(address, distance, edge_line_width, use_cache, fig_size,
+                    group_folder: str = '', save_timestamp: int = 1):
     print("-------------------------------BOUNDING BOX--------------------------------")
     point = osmnx.geocode(address)
     bounding_box = osmnx.utils_geo.bbox_from_point(point, dist=distance)
@@ -19,14 +20,18 @@ def process_address(address, distance, edge_line_width, use_cache, fig_size):
                                                 edge_linewidth=edge_line_width,
                                                 use_cache=use_cache,
                                                 custom_font="Poppins",
-                                                fig_size=fig_size)
+                                                fig_size=fig_size,
+                                                group_folder=group_folder,
+                                                save_timestamp=save_timestamp)
     print("-----------------------------------LANGUAGE-----------------------------------")
     map_origin_of_address(address, distance,
                           edge_linewidth=edge_line_width,
                           map_language=True,
                           use_cache=use_cache,
                           custom_font="Poppins",
-                          fig_size=fig_size)
+                          fig_size=fig_size,
+                          group_folder=group_folder,
+                          save_timestamp=save_timestamp)
 
     print("-----------------------------CALCULATE LENGTHS-----------------------------")
     grouped_by_origin = calculate_length_by_origin(gdf)
@@ -34,25 +39,34 @@ def process_address(address, distance, edge_line_width, use_cache, fig_size):
     return grouped_by_origin
 
 
-def process_polygon(polygon: shapely.geometry.Polygon, address, edge_line_width, use_cache, fig_size):
+def process_polygon(polygon: shapely.geometry.Polygon, address, edge_line_width, use_cache, fig_size,
+                    group_folder: str = '', save_timestamp: int = 1):
     print("----------------------------------DICTIONARY----------------------------------")
     graph, gdf, map_fig = map_origin_of_polygon(polygon, address,
                                                 edge_linewidth=edge_line_width,
                                                 use_cache=use_cache,
                                                 custom_font="Poppins",
-                                                fig_size=fig_size)
+                                                fig_size=fig_size,
+                                                group_folder=group_folder,
+                                                save_timestamp=save_timestamp)
     print("-----------------------------------LANGUAGE-----------------------------------")
-    map_origin_of_polygon(polygon, address,
-                          edge_linewidth=edge_line_width,
-                          map_language=True,
-                          use_cache=use_cache,
-                          custom_font="Poppins",
-                          fig_size=fig_size)
+    graph_language, gdf_language, map_fig_language = map_origin_of_polygon(polygon, address,
+                                                                           edge_linewidth=edge_line_width,
+                                                                           map_language=True,
+                                                                           use_cache=use_cache,
+                                                                           custom_font="Poppins",
+                                                                           fig_size=fig_size,
+                                                                           group_folder=group_folder,
+                                                                           save_timestamp=save_timestamp)
 
-    print("-----------------------------CALCULATE LENGTHS-----------------------------")
-    grouped_by_origin = calculate_length_by_origin(gdf)
-    print(grouped_by_origin)
-    return grouped_by_origin
+    print("-----------------------------CALCULATE LENGTHS DICTIONARY ORIGIN-----------------------------")
+    grouped_by_dictionary_origin = calculate_length_by_origin(gdf)
+    print(grouped_by_dictionary_origin)
+
+    print("-----------------------------CALCULATE LENGTHS LANGUAGE ORIGIN-----------------------------")
+    grouped_by_language_origin = calculate_length_by_origin(gdf_language)
+    print(grouped_by_language_origin)
+    return grouped_by_dictionary_origin, grouped_by_language_origin
 
 
 def map_e2e() -> tuple[Any, Any, Any] | None:
