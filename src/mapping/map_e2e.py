@@ -9,6 +9,11 @@ from mapping.main import map_origin_of_address, map_origin_of_polygon
 
 
 def process_address(address, distance, edge_line_width, use_cache, fig_size):
+    print("-------------------------------BOUNDING BOX--------------------------------")
+    point = osmnx.geocode(address)
+    bounding_box = osmnx.utils_geo.bbox_from_point(point, dist=distance)
+    print(bounding_box)
+
     print("----------------------------------DICTIONARY----------------------------------")
     graph, gdf, map_fig = map_origin_of_address(address, distance,
                                                 edge_linewidth=edge_line_width,
@@ -22,11 +27,6 @@ def process_address(address, distance, edge_line_width, use_cache, fig_size):
                           use_cache=use_cache,
                           custom_font="Poppins",
                           fig_size=fig_size)
-
-    print("-------------------------------BOUNDING BOX--------------------------------")
-    point = osmnx.geocode(address)
-    bounding_box = osmnx.utils_geo.bbox_from_point(point, dist=distance)
-    print(bounding_box)
 
     print("-----------------------------CALCULATE LENGTHS-----------------------------")
     grouped_by_origin = calculate_length_by_origin(gdf)
