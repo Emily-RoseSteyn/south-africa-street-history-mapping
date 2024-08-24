@@ -6,6 +6,7 @@ from typing import Any
 
 import geopandas as gpd
 import matplotlib.font_manager as font_manager
+import networkx
 import osmnx as ox
 import shapely
 from geopandas import GeoDataFrame
@@ -18,7 +19,7 @@ from utils.logger import get_logger
 logger = get_logger()
 
 
-def get_gdf(address, graph, processed_place_name, label, map_language, use_cache: bool = True):
+def get_gdf(address, graph: networkx.MultiDiGraph, processed_place_name, label, map_language, use_cache: bool = True):
     logger.info(f"Getting geodataframe for {address}")
     gdf_output_dir = OUTPUT_GDF_DIR
     if not os.path.exists(gdf_output_dir):
@@ -34,6 +35,12 @@ def get_gdf(address, graph, processed_place_name, label, map_language, use_cache
 
     # Otherwise, convert to geopandas
     gdf = ox.graph_to_gdfs(graph, nodes=False)
+
+    # Catch case for sometimes name column not in graph at all
+    # TODO: Figure out why??
+    if 'name' not in gdf.keys():
+        gdf['name'] = None
+
     # Map street origins with colours
     gdf = gdf.apply(lambda x: map_street_to_origin(x, map_language), axis=1)
 
@@ -95,6 +102,7 @@ def map_origin_of_polygon(polygon: shapely.geometry.Polygon, address: str, edge_
     start_time = time()
 
     # Getting OSMNX graph from address
+    # TODO: Consider switching to simplify=False - might be missing some data by leaving it true
     graph = ox.graph_from_polygon(polygon, network_type='drive')
 
     logger.info(f"Retrieved graph for polygon of address {address}")
@@ -123,6 +131,7 @@ def map_origin_of_address(address: str, dist: int = 1000, edge_linewidth: int = 
     start_time = time()
 
     # Getting OSMNX graph from address
+    # TODO: Consider switching to simplify=False - might be missing some data by leaving it true
     graph = ox.graph_from_address(address, network_type='drive', dist=dist)
 
     logger.info(f"Retrieved graph for address {address}")
