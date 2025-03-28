@@ -6,13 +6,19 @@ for creating maps of street networks colour coded by place of origin and languag
 
 This readme is divided into:
 
+* [Outputs](#outputs)
 * [Results](#results)
-* [Academic Outputs](#academic-outputs)
 * [Running the code](#running-the-code)
 * [Helpful Notebooks](#helpful-notebooks)
 * [Contact](#contact)
 
 [//]: # (* [References]&#40;#references&#41;)
+
+## Outputs
+
+* [Peer Reviewed Extended Abstract Submission for IC2S2 2024](https://drive.google.com/file/d/1mg51emH_hcpDfETxtvwa5pJng3P2FNKP/view?usp=drive_link)
+* [Poster for IC2S2 2024](https://drive.google.com/file/d/1oTQ1dDyFoRqsKCXKTvk2OtT13-hKzsPT/view?usp=drive_link)
+* Paper coming soon!
 
 ## Results
 
@@ -23,11 +29,7 @@ This readme is divided into:
 | Sandton      | ![sandton](./images/2024-07-03_09-04_sandton.png)     | ![sandton-lang](./images/2024-07-03_09-04_sandton_language.png)     |
 | Cape Town    | ![cape-town](./images/2024-07-03_09-06_cape_town.png) | ![cape-town-lang](./images/2024-07-03_09-08_cape_town_language.png) |
 
-## Academic Outputs
 
-* [Peer Reviewed Extended Abstract Submission for IC2S2 2024](https://drive.google.com/file/d/1mg51emH_hcpDfETxtvwa5pJng3P2FNKP/view?usp=drive_link)
-* [Poster for IC2S2 2024](https://drive.google.com/file/d/1oTQ1dDyFoRqsKCXKTvk2OtT13-hKzsPT/view?usp=drive_link)
-* Paper coming soon!
 
 ## Running the code
 
