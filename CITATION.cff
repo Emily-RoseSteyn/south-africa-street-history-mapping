@@ -1,0 +1,34 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: South Africa Street History Mapping
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Emily-Rose S.
+    family-names: Steyn
+    email: emily-rose.steyn@students.wits.ac.za
+    orcid: 'https://orcid.org/0000-0002-1007-7891'
+    affiliation: University of the Witwatersrand
+repository-code: >-
+  https://github.com/Emily-RoseSteyn/south-africa-street-history-mapping
+abstract: >
+  This research explores the extent to which the urban
+  fabric of South Africa can be delineated by the spatial
+  distribution of street names as they cluster according to
+  colonial heritage. We do this by correlating street names
+  to probable country of origin (based on street names in
+  other countries) and colour-coding the results on a street
+  network map. Although street names are often overlooked as
+  trivial geography, the political, historical, and symbolic
+  significance of street names cannot be ignored.
+  Preliminary results in Johannesburg, South Africa provide
+  an interesting and colourful visualisation of the legacy
+  of colonialism and apartheid in the city. Further work is
+  ongoing to scale this mapping to other South African
+  cities and to incorporate language detection as an
+  indication of origin.
+license: GPL-3.0
