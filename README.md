@@ -25,6 +25,7 @@ This readme is divided into:
 
 ## Academic Outputs
 
+* [Peer Reviewed Extended Abstract Submission for IC2S2 2024](https://drive.google.com/file/d/1mg51emH_hcpDfETxtvwa5pJng3P2FNKP/view?usp=drive_link)
 * [Poster for IC2S2 2024](https://drive.google.com/file/d/1oTQ1dDyFoRqsKCXKTvk2OtT13-hKzsPT/view?usp=drive_link)
 * Paper coming soon!
 
